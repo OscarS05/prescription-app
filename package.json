@@ -1,0 +1,39 @@
+{
+  "name": "prescription-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run start:dev -w api",
+    "dev:web": "npm run dev -w web",
+    "build": "npm run dev --workspaces"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OscarS05/prescription-app.git"
+  },
+  "keywords": [
+    "prescription-app",
+    "next.js",
+    "react",
+    "nestjs",
+    "nodejs",
+    "typescript",
+    "arquitectura",
+    "modular",
+    "arquitecturas",
+    "limpias",
+    "depency",
+    "injection"
+  ],
+  "author": "Oscar Monsalve",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OscarS05/prescription-app/issues"
+  },
+  "homepage": "https://github.com/OscarS05/prescription-app#readme"
+}
