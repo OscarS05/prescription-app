@@ -2,9 +2,8 @@ import { UserRole } from '../enums/roles.enum';
 
 export type User = {
   id: string;
-  documentType: string;
+  documentType: DocumentType;
   documentNumber: string;
-  name: string;
   email: string;
   password: string;
   role: UserRole;
@@ -13,6 +12,8 @@ export type User = {
   updatedAt: Date;
   deletedAt: Date | null;
 };
+
+export type DocumentType = 'cc' | 'ce' | 'pp' | 'ti';
 
 export type SessionResponse = {
   refreshToken: string;
@@ -26,7 +27,7 @@ export type CredentialRegister = Omit<
   'id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'refreshTokenHash'
 >;
 
-export type PaylodToken = {
+export type PayloadToken = {
   sub: string;
   role: UserRole;
 };

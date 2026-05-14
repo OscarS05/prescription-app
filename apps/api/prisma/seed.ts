@@ -5,7 +5,7 @@ import { seedDoctor } from './seeders/doctor.seed';
 import { seedPatient } from './seeders/patient.seed';
 import { seedPrescriptions } from './seeders/prescription.seed';
 
-const adapter = new PrismaPg({ connectionString: process.env['DATABASE_URL']! });
+export const adapter = new PrismaPg({ connectionString: process.env['DATABASE_URL']! });
 export const prisma = new PrismaClient({ adapter });
 
 export const passwordSaltRounds = 10;

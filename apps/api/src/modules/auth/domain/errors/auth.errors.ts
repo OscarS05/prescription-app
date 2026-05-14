@@ -12,6 +12,13 @@ export class InvalidSessionError extends Error {
   }
 }
 
+export class InvalidTokenError extends Error {
+  constructor(message?: string) {
+    super(message || 'Invalid token');
+    this.name = 'InvalidTokenError';
+  }
+}
+
 export class InvalidCredentialsError extends Error {
   constructor() {
     super('Invalid credentials');
