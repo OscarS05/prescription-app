@@ -100,6 +100,10 @@ CREATE UNIQUE INDEX users_email_unique
 ON users(email)
 WHERE deleted_at IS NULL;
 
+CREATE UNIQUE INDEX users_document_number_unique
+ON users(document_number, document_type)
+WHERE deleted_at IS NULL;
+
 CREATE UNIQUE INDEX prescriptions_code_unique
 ON prescriptions(code)
 WHERE deleted_at IS NULL;
