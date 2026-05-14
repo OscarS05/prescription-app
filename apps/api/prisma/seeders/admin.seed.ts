@@ -19,6 +19,7 @@ export async function seedAdmin() {
         email: 'admin@test.com',
         password: adminPassword,
         role: UserRole.admin,
+        refreshTokenHash: null,
         documentType: DocumentType.cc,
         documentNumber: '100000001',
       },

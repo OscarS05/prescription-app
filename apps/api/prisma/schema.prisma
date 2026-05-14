@@ -25,15 +25,16 @@ enum PrescriptionStatus {
 }
 
 model User {
-  id              String        @id @default(uuid())
-  documentType    DocumentType  @map("document_type")
-  documentNumber  String        @map("document_number") @db.VarChar(20)
-  email           String        @db.VarChar(254)
-  password        String        @db.VarChar(255)
-  role            UserRole
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
-  deletedAt       DateTime?     @map("deleted_at")
+  id               String        @id @default(uuid())
+  documentType     DocumentType  @map("document_type")
+  documentNumber   String        @map("document_number") @db.VarChar(20)
+  email            String        @db.VarChar(254)
+  password         String        @db.VarChar(255)
+  role             UserRole
+  refreshTokenHash String? @map("refresh_token_hash") @db.VarChar(255)
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+  deletedAt        DateTime?     @map("deleted_at")
 
   doctor          Doctor?
   patient         Patient?

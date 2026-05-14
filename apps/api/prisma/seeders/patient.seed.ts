@@ -20,6 +20,7 @@ export async function seedPatient() {
         password: patientPassword,
         role: UserRole.patient,
         documentType: DocumentType.cc,
+        refreshTokenHash: null,
         documentNumber: '100000003',
       },
     }));

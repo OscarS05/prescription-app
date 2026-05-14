@@ -19,6 +19,7 @@ export async function seedDoctor() {
         password: doctorPassword,
         role: UserRole.doctor,
         documentType: DocumentType.cc,
+        refreshTokenHash: null,
         documentNumber: '100000002',
       },
     }));
