@@ -34,5 +34,8 @@
   "bugs": {
     "url": "https://github.com/OscarS05/prescription-app/issues"
   },
-  "homepage": "https://github.com/OscarS05/prescription-app#readme"
+  "homepage": "https://github.com/OscarS05/prescription-app#readme",
+  "devDependencies": {
+    "prisma": "^7.8.0"
+  }
 }

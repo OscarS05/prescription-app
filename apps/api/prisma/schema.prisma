@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  admin
+  doctor
+  patient
+}
+
+enum DocumentType {
+  cc
+  ti
+  ce
+  ppt
+}
+
+enum PrescriptionStatus {
+  pending
+  consumed
+}
+
+model User {
+  id              String        @id @default(uuid())
+  documentType    DocumentType  @map("document_type")
+  documentNumber  String        @map("document_number") @db.VarChar(20)
+  email           String        @db.VarChar(254)
+  password        String        @db.VarChar(255)
+  role            UserRole
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  deletedAt       DateTime?     @map("deleted_at")
+
+  doctor          Doctor?
+  patient         Patient?
+
+  @@index([email])
+  @@map("users")
+}
+
+model Doctor {
+  userId       String      @id @map("user_id")
+  specialty    String      @db.VarChar(50)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  prescriptions Prescription[]
+
+  @@map("doctors")
+}
+
+model Patient {
+  userId        String      @id @map("user_id")
+  birthDate     DateTime    @map("birth_date") @db.Date
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  prescriptions Prescription[]
+
+  @@map("patients")
+}
+
+model Prescription {
+  id            String                @id @default(uuid())
+  doctorId      String                @map("doctor_id")
+  patientId     String                @map("patient_id")
+  code          String                @db.VarChar(255)
+  status        PrescriptionStatus
+  notes         String?               @db.VarChar(255)
+  createdAt     DateTime              @default(now()) @map("created_at")
+  consumedAt    DateTime?             @map("consumed_at")
+  deletedAt     DateTime?             @map("deleted_at")
+
+  doctor        Doctor                @relation(fields: [doctorId], references: [userId], onDelete: Cascade)
+  patient       Patient               @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+
+  items         PrescriptionItem[]
+
+  @@index([doctorId])
+  @@index([patientId])
+  @@index([status, createdAt])
+  @@map("prescriptions")
+}
+
+model PrescriptionItem {
+  id              String          @id @default(uuid())
+  prescriptionId  String          @map("prescription_id")
+  name            String          @db.VarChar(100)
+  dosage          String?         @db.VarChar(100)
+  quantity        Int?
+  instructions    String?         @db.VarChar(500)
+
+  prescription    Prescription    @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+
+  @@map("prescription_items")
+}
