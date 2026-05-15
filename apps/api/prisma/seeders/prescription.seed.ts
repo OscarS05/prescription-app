@@ -1,5 +1,5 @@
 import { PrescriptionStatus } from '@prisma/client';
-import { prisma } from '../seed';
+import { prisma } from '../main.seed';
 
 type UserIds = {
   adminId: string | null;
@@ -47,7 +47,6 @@ export async function seedPrescriptions(ids: UserIds) {
     const existPrescription = await prisma.prescription.findFirst({
       where: {
         code: prescriptionData.code,
-        deletedAt: null,
       },
     });
 

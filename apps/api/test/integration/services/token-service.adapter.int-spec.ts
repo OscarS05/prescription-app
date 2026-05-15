@@ -1,11 +1,9 @@
-// token-service.adapter.int.spec.ts
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 
-import { TokenServiceAdapter } from '../../../src/modules/auth/infrastructure/services/token.service';
-import { UserRole } from '../../../src/modules/auth/domain/enums/roles.enum';
+import { TokenServiceAdapter } from '../../../src/modules/identity/infrastructure/services/token.service';
+import { UserRole } from '../../../src/modules/identity/domain/enums/roles.enum';
 
 describe('TokenServiceAdapter Integration', () => {
   let service: TokenServiceAdapter;

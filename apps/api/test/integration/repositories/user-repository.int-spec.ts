@@ -2,8 +2,8 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../../src/shared/infrastructure/prisma/prisma.service';
-import { UserRepositoryPrismaAdapter } from '../../../src/modules/auth/infrastructure/db/user.repository';
-import { UserRole } from '../../../src/modules/auth/domain/enums/roles.enum';
+import { UserRepositoryPrismaAdapter } from '../../../src/modules/identity/infrastructure/db/user.repository';
+import { UserRole } from '../../../src/modules/identity/domain/enums/roles.enum';
 
 describe('UserRepositoryPrismaAdapter Integration', () => {
   let repository: UserRepositoryPrismaAdapter;
@@ -45,6 +45,23 @@ describe('UserRepositoryPrismaAdapter Integration', () => {
     });
 
     expect(user.email).toBe('create@integration.test');
+  });
+
+  it('should find user by id', async () => {
+    const createdUser = await prisma.user.create({
+      data: {
+        email: 'find@integration.test',
+        password: '123456',
+        role: UserRole.ADMIN,
+        documentType: 'cc',
+        documentNumber: '456',
+      },
+    });
+
+    const user = await repository.findById(createdUser.id);
+
+    expect(user).not.toBeNull();
+    expect(user?.id).toBe(createdUser.id);
   });
 
   it('should find user by email', async () => {

@@ -45,7 +45,7 @@ model User {
 
 model Doctor {
   userId       String      @id @map("user_id")
-  specialty    String      @db.VarChar(50)
+  specialty    String?     @db.VarChar(50)
   createdAt    DateTime    @default(now()) @map("created_at")
   updatedAt    DateTime    @updatedAt @map("updated_at")
 
@@ -58,7 +58,7 @@ model Doctor {
 
 model Patient {
   userId        String      @id @map("user_id")
-  birthDate     DateTime    @map("birth_date") @db.Date
+  birthDate     DateTime?   @map("birth_date") @db.Date
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")
 

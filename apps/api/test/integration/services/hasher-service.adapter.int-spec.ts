@@ -1,4 +1,4 @@
-import { HashServiceAdapter } from '../../../src/modules/auth/infrastructure/services/hash.service';
+import { HashServiceAdapter } from '../../../src/modules/identity/infrastructure/services/hash.service';
 
 describe('HashServiceAdapter Integration', () => {
   let service: HashServiceAdapter;

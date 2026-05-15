@@ -8,7 +8,7 @@ export interface Env {
 
   // JWT
   JWT_ACCESS_SECRET: string;
-  JWT_ACCESS_TTL: number;
+  JWT_ACCESS_TTL: string;
   JWT_REFRESH_SECRET: string;
-  JWT_REFRESH_TTL: number;
+  JWT_REFRESH_TTL: string;
 }

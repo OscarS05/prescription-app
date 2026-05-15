@@ -1,32 +1,30 @@
 import * as bcrypt from 'bcrypt';
 import { UserRole, DocumentType } from '@prisma/client';
-import { passwordSaltRounds, prisma } from '../seed';
+import { passwordSaltRounds, prisma } from '../main.seed';
+
+export const adminEmailSeed = 'admin@test.com';
+export const adminPassSeed = 'admin123';
 
 export async function seedAdmin() {
-  let id: string | null = null;
-
-  const adminPassword = await bcrypt.hash('admin123', passwordSaltRounds);
+  const adminPassword = await bcrypt.hash(adminPassSeed, passwordSaltRounds);
   const existingAdminUser = await prisma.user.findFirst({
     where: {
-      email: 'admin@test.com',
-      deletedAt: null,
+      email: adminEmailSeed,
     },
   });
 
-  if (!existingAdminUser) {
-    const user = await prisma.user.create({
+  const user =
+    existingAdminUser ||
+    (await prisma.user.create({
       data: {
-        email: 'admin@test.com',
+        email: adminEmailSeed,
         password: adminPassword,
         role: UserRole.admin,
         refreshTokenHash: null,
         documentType: DocumentType.cc,
         documentNumber: '100000001',
       },
-    });
+    }));
 
-    id = user.id;
-  }
-
-  return id || existingAdminUser?.id || null;
+  return user.id;
 }

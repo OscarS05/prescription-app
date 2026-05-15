@@ -1,14 +1,16 @@
 import * as bcrypt from 'bcrypt';
 import { UserRole, DocumentType } from '@prisma/client';
-import { passwordSaltRounds, prisma } from '../seed';
+import { passwordSaltRounds, prisma } from '../main.seed';
+
+export const patientEmailSeed = 'patient@test.com';
+export const patientPassSeed = 'patient123';
 
 export async function seedPatient() {
-  const patientPassword = await bcrypt.hash('patient123', passwordSaltRounds);
+  const patientPassword = await bcrypt.hash(patientPassSeed, passwordSaltRounds);
 
   const patientUser = await prisma.user.findFirst({
     where: {
-      email: 'patient@test.com',
-      deletedAt: null,
+      email: patientEmailSeed,
     },
   });
 
@@ -16,7 +18,7 @@ export async function seedPatient() {
     patientUser ??
     (await prisma.user.create({
       data: {
-        email: 'patient@test.com',
+        email: patientEmailSeed,
         password: patientPassword,
         role: UserRole.patient,
         documentType: DocumentType.cc,
