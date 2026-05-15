@@ -192,13 +192,23 @@ docs/decisions/
 
 # Architecture
 
-Coming soon.
+The project is a monorepo with two applications:
+
+- **`apps/api`** — NestJS REST API following Hexagonal architecture (domain / application / infrastructure layers).
+- **`apps/web`** — Next.js frontend (in progress).
+  Each application is independently runnable and has its own dependencies, configuration, and test suite. See the README inside each app for details.
 
 ---
 
 # Backend Structure
 
-Coming soon.
+See [`apps/api/README.md`](./apps/api/README.md) for the full backend documentation, including:
+
+- Module breakdown
+- Clean Architecture layer structure
+- Authentication and RBAC
+- API endpoints
+- Test strategy
 
 ---
 
@@ -210,31 +220,56 @@ Coming soon.
 
 # Authentication
 
-Coming soon.
+Cookie-based JWT authentication with access and refresh tokens. The API issues both tokens as HTTP-only cookies on login.
+
+See [`apps/api/README.md`](./apps/api/README.md#authentication) for the full flow.
 
 ---
 
 # Authorization (RBAC)
 
-Coming soon.
+Three roles are defined: `ADMIN`, `DOCTOR`, and `PATIENT`. Access to endpoints is restricted per role via a `RolesGuard`.
+
+See [`apps/api/README.md`](./apps/api/README.md#authorization-rbac) for details.
 
 ---
 
 # API Endpoints
 
-Coming soon.
+| Method | Path             | Description                 |
+| ------ | ---------------- | --------------------------- |
+| `POST` | `/auth/register` | Register a new user         |
+| `POST` | `/auth/login`    | Login                       |
+| `POST` | `/auth/logout`   | Logout                      |
+| `POST` | `/auth/refresh`  | Refresh access token        |
+| `GET`  | `/auth/me`       | Get current user            |
+| `GET`  | `/users`         | List all users (Admin only) |
+
+See [`apps/api/README.md`](./apps/api/README.md#api-endpoints) for the full endpoint reference.
 
 ---
 
 # Testing
 
-Coming soon.
+Tests are organized at three levels in `apps/api`:
+
+| Level       | Command            | Description                                    |
+| ----------- | ------------------ | ---------------------------------------------- |
+| Unit        | `npm run test`     | Use cases and services in isolation            |
+| Integration | `npm run test:int` | Repository and adapter tests against a real DB |
+| E2E         | `npm run test:e2e` | Full HTTP flow tests                           |
+
+Run from `apps/api`. See [`apps/api/README.md`](./apps/api/README.md#test-strategy) for details.
 
 ---
 
 # Coverage
 
-Coming soon.
+From `apps/api`:
+
+```bash
+npm run test:cov
+```
 
 ---
 

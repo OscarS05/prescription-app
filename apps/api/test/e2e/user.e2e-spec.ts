@@ -2,12 +2,14 @@ import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { Server } from 'http';
 import cookieParser from 'cookie-parser';
-import * as bcrypt from 'bcrypt';
 
 import { createTestApp } from './app.e2e';
 import { PrismaService } from '../../src/shared/infrastructure/prisma/prisma.service';
 import { adminEmailSeed, adminPassSeed } from '../../prisma/seeders/admin.seed';
 import { getTokensFromCookies } from './helpers/cookie.helper';
+import { runSeeds } from '../../prisma/main.seed';
+import { QueryResponse } from '../../src/modules/identity/infrastructure/dtos/user.dto';
+import { UserInfo } from '../../src/modules/identity/domain/types/auth.types';
 
 describe('GET /users (e2e)', () => {
   let app: INestApplication;
@@ -29,22 +31,7 @@ describe('GET /users (e2e)', () => {
     await prismaService.patient.deleteMany();
     await prismaService.doctor.deleteMany();
 
-    // Seed admin user (igual que tu setup)
-    const user = await prismaService.user.create({
-      data: {
-        email: 'admin@test.com',
-        password: await bcrypt.hash('admin123', 10),
-        role: 'doctor',
-        documentNumber: '100000001',
-        documentType: 'cc',
-      },
-    });
-
-    await prismaService.doctor.create({
-      data: {
-        userId: user.id,
-      },
-    });
+    await runSeeds();
 
     await app.init();
 
@@ -66,16 +53,16 @@ describe('GET /users (e2e)', () => {
 
     expect(res.status).toBe(200);
 
-    expect(res.body).toEqual(
+    const body = res.body as QueryResponse<UserInfo>;
+    expect(body).toEqual(
       expect.objectContaining({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        data: expect.any(Array),
         page: 1,
         limit: 10,
-        total: 1,
+        total: 2,
         hasNextPage: false,
       }),
     );
+    expect(body.data.length).toBe(2); // 2 users with those roles: doctor and patient in seeders
   });
 
   it('should return empty list when no users exist', async () => {
@@ -85,12 +72,15 @@ describe('GET /users (e2e)', () => {
 
     expect(res.status).toBe(200);
 
-    expect(res.body).toEqual({
-      data: [],
-      page: 1,
-      limit: 10,
-      total: 0,
-      hasNextPage: false,
-    });
+    const body = res.body as QueryResponse<UserInfo>;
+    expect(body).toEqual(
+      expect.objectContaining({
+        page: 1,
+        limit: 10,
+        total: 1,
+        hasNextPage: false,
+      }),
+    );
+    expect(body.data.length).toBe(1); // 1 patient in seeders
   });
 });

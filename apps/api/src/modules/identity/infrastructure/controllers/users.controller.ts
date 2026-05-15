@@ -1,10 +1,14 @@
-import { Controller, Get, HttpCode, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Query, UseGuards } from '@nestjs/common';
 import { GetUsersUseCase } from '../../application/use-cases/get-users/get-users.use-case';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserResponseDto } from '../dtos/auth.dto';
 import { ErrorMapper } from '../mappers/error.mapper';
 import { QueryParam, QueryResponse } from '../dtos/user.dto';
 import { UserInfo } from '../../domain/types/auth.types';
+import { AccessTokenGuard } from '../../../../shared/infrastructure/guards/accessToken.guard';
+import { RolesGuard } from '../../../../shared/infrastructure/guards/roles.guard';
+import { Roles } from '../../../../shared/infrastructure/decorators/roles.decorator';
+import { UserRole } from '../../domain/enums/roles.enum';
 
 @Controller('users')
 export class UsersController {
@@ -17,8 +21,10 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'List of all users',
-    type: [UserResponseDto],
+    type: QueryResponse<UserInfo>,
   })
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RolesGuard)
   @HttpCode(200)
   @Get()
   async getUsers(@Query() query: QueryParam): Promise<QueryResponse<UserInfo>> {
