@@ -1,3 +1,4 @@
+import '../src/shared/infrastructure/env/env';
 import { prisma, runSeeds } from './main.seed';
 
 runSeeds()

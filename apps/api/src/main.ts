@@ -3,6 +3,8 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 
+import './shared/infrastructure/env/env';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {

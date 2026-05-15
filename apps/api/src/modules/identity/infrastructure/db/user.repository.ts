@@ -16,11 +16,15 @@ export class UserRepositoryPrismaAdapter extends UserRepository {
       where: { id, deletedAt: null },
       include: { doctor: true, patient: true },
     });
+
     return user ? UserMapper.toDomain(user) : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findFirst({ where: { email, deletedAt: null } });
+    const user = await this.prisma.user.findFirst({
+      where: { email, deletedAt: null },
+      include: { doctor: true, patient: true },
+    });
     return user ? UserMapper.toDomain(user) : null;
   }
 

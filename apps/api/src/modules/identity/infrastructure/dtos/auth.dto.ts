@@ -10,10 +10,10 @@ import {
   Length,
   Matches,
 } from 'class-validator';
-import type { DocumentType } from '../../domain/types/auth.types';
+import type { DocumentType, UserInfo } from '../../domain/types/auth.types';
 import { UserRole } from '../../domain/enums/roles.enum';
-import { DoctorDto } from './doctor.dto';
-import { PatientDto } from './patient.dto';
+import { DoctorDto, DoctorResponseDto } from './doctor.dto';
+import { PatientDto, PatientResponseDto } from './patient.dto';
 
 export class UserBaseDto {
   @IsUUID()
@@ -25,7 +25,7 @@ export class UserBaseDto {
   email!: string;
 
   @IsString()
-  @Length(8, 35)
+  @Length(5, 35)
   @Matches(/^[^\s]+$/)
   password!: string;
 
@@ -69,4 +69,18 @@ export class RegisterDto extends PickType(UserBaseDto, [
 export class UserResponseDto extends OmitType(UserBaseDto, [
   'password',
   'refreshTokenHashed',
-]) {}
+]) {
+  static fromDomain(user: UserInfo): UserResponseDto {
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      documentType: user.documentType,
+      documentNumber: user.documentNumber,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      doctor: user.doctor ? DoctorResponseDto.fromDomain(user.doctor) : undefined,
+      patient: user.patient ? PatientResponseDto.fromDomain(user.patient) : undefined,
+    };
+  }
+}

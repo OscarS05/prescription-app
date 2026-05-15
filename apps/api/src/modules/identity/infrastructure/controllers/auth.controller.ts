@@ -58,7 +58,7 @@ export class AuthController {
       setCookie(res, 'refreshToken', tokens.refreshToken);
       setCookie(res, 'accessToken', tokens.accessToken);
 
-      return user;
+      return UserResponseDto.fromDomain(user);
     } catch (error) {
       throw ErrorMapper.toHttp(error);
     }
@@ -109,7 +109,6 @@ export class AuthController {
       setCookie(res, 'refreshToken', tokens.refreshToken);
       setCookie(res, 'accessToken', tokens.accessToken);
     } catch (error) {
-      console.log('error:', error);
       throw ErrorMapper.toHttp(error);
     }
   }

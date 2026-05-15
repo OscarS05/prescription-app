@@ -1,15 +1,15 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsEmpty, IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
+import { IsDate, IsNotEmpty, IsUUID } from 'class-validator';
+import { Patient } from '../../domain/types/patient.types';
 
 export class PatientDto {
   @IsUUID()
   @IsNotEmpty()
   userId!: string;
 
-  @Length(4, 50)
-  @IsString()
-  @IsEmpty()
-  speciality!: string;
+  @Type(() => Date)
+  @IsDate()
+  birthDate!: Date | null;
 
   @Type(() => Date)
   @IsDate()
@@ -18,4 +18,15 @@ export class PatientDto {
   @Type(() => Date)
   @IsDate()
   updatedAt!: Date;
+}
+
+export class PatientResponseDto extends PatientDto {
+  static fromDomain(patient: Patient): PatientResponseDto {
+    const dto = new PatientResponseDto();
+    dto.userId = patient.userId;
+    dto.birthDate = patient.birthDate;
+    dto.createdAt = patient.createdAt;
+    dto.updatedAt = patient.updatedAt;
+    return dto;
+  }
 }
