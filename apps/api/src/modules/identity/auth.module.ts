@@ -21,10 +21,12 @@ import { DoctorRepositoryPrismaAdapter } from './infrastructure/db/doctor.reposi
 import { PatientRepository } from './domain/ports/patient.repository';
 import { PatientRepositoryPrismaAdapter } from './infrastructure/db/patient.repository';
 import { SessionManagerService } from './application/services/session-manager/session-manager.service';
+import { UsersController } from './infrastructure/controllers/users.controller';
+import { GetUsersUseCase } from './application/use-cases/get-users/get-users.use-case';
 
 @Module({
   imports: [PrismaModule, JwtModule.register({})],
-  controllers: [AuthController],
+  controllers: [AuthController, UsersController],
   providers: [
     { provide: UserRepository, useClass: UserRepositoryPrismaAdapter },
     { provide: DoctorRepository, useClass: DoctorRepositoryPrismaAdapter },
@@ -38,6 +40,7 @@ import { SessionManagerService } from './application/services/session-manager/se
     RefreshSessionUseCase,
     RegisterUserUseCase,
     SessionManagerService,
+    GetUsersUseCase,
   ],
 })
 export class AuthModule {}

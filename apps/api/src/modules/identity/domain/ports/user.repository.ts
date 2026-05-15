@@ -1,6 +1,7 @@
-import { CredentialRegister, User } from '../types/auth.types';
+import { CredentialRegister, QueryRequest, User } from '../types/auth.types';
 
 export abstract class UserRepository {
+  abstract findAll(query: QueryRequest): Promise<[User[], number]>;
   abstract findById(id: string): Promise<User | null>;
   abstract findByEmail(email: string): Promise<User | null>;
   abstract create(data: CredentialRegister): Promise<User>;

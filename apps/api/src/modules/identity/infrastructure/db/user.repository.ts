@@ -1,14 +1,63 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../domain/ports/user.repository';
 import { PrismaService } from '../../../../shared/infrastructure/prisma/prisma.service';
-import { CredentialRegister, User } from '../../domain/types/auth.types';
-import { DocumentType } from '@prisma/client';
+import { CredentialRegister, QueryRequest, User } from '../../domain/types/auth.types';
+import { DocumentType, Prisma } from '@prisma/client';
 import { UserMapper } from '../mappers/user.mapper';
 
 @Injectable()
 export class UserRepositoryPrismaAdapter extends UserRepository {
   constructor(private readonly prisma: PrismaService) {
     super();
+  }
+
+  async findAll(query: QueryRequest): Promise<[User[], number]> {
+    const { offset, limit, query: search, roles } = query;
+
+    const where = {
+      deletedAt: null,
+      ...(search
+        ? {
+            OR: [
+              {
+                email: {
+                  contains: search,
+                  mode: Prisma.QueryMode.insensitive,
+                },
+              },
+              {
+                documentNumber: {
+                  contains: search,
+                  mode: Prisma.QueryMode.insensitive,
+                },
+              },
+            ],
+          }
+        : {}),
+      ...(roles && roles.length > 0
+        ? {
+            role: {
+              in: roles,
+            },
+          }
+        : {}),
+    };
+
+    const [users, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        skip: offset,
+        take: limit,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prisma.user.count({
+        where,
+      }),
+    ]);
+
+    return [users.map((u) => UserMapper.toDomain(u)), total];
   }
 
   async findById(id: string): Promise<User | null> {
