@@ -8,7 +8,7 @@ import { DoctorRepository } from '../../../domain/ports/doctor.repository';
 import { UserRole } from '../../../domain/enums/roles.enum';
 
 @Injectable()
-export class RegisterUserUseCase {
+export class CreateUserUseCase {
   constructor(
     private readonly hashService: HashService,
     private readonly usersRepo: UserRepository,
@@ -31,7 +31,8 @@ export class RegisterUserUseCase {
         userId: newUser.id,
         specialty: null,
       });
-      return { ...newUser, doctor };
+
+      newUser.doctor = doctor;
     }
 
     if (data.role === UserRole.PATIENT) {
@@ -39,7 +40,7 @@ export class RegisterUserUseCase {
         userId: newUser.id,
         birthDate: null,
       });
-      return { ...newUser, patient };
+      newUser.patient = patient;
     }
 
     return newUser;

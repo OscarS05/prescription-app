@@ -11,11 +11,10 @@ import {
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Response } from 'express';
 
-import { RegisterUserUseCase } from '../../application/use-cases/regiser-user/register-user.use-case';
 import { LoginUseCase } from '../../application/use-cases/login/login.use-case';
 import { RefreshSessionUseCase } from '../../application/use-cases/refresh-session/refresh-session.use-case';
 import { LogoutUseCase } from '../../application/use-cases/logout/logout.use-case';
-import { LoginDto, RegisterDto, UserResponseDto } from '../dtos/auth.dto';
+import { LoginDto, UserResponseDto } from '../dtos/auth.dto';
 import { clearCookie, setCookie } from '../helpers/cookie.helper';
 import { Public } from '../../../../shared/infrastructure/decorators/public.decorator';
 import { RefreshToken } from '../decorators/refreshToken.decorator';
@@ -25,14 +24,10 @@ import type { PayloadToken } from '../../domain/types/auth.types';
 import { ErrorMapper } from '../mappers/error.mapper';
 import { GetUserInfoUseCase } from '../../application/use-cases/get-user-info/get-user-info.use-case';
 import { RefreshTokenGuard } from '../../../../shared/infrastructure/guards/refreshToken.guard';
-import { RolesGuard } from '../../../../shared/infrastructure/guards/roles.guard';
-import { Roles } from '../../../../shared/infrastructure/decorators/roles.decorator';
-import { UserRole } from '../../domain/enums/roles.enum';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly registerUseCase: RegisterUserUseCase,
     private readonly loginUseCase: LoginUseCase,
     private readonly refreshSessionUseCase: RefreshSessionUseCase,
     private readonly logoutUseCase: LogoutUseCase,
@@ -59,29 +54,6 @@ export class AuthController {
       setCookie(res, 'accessToken', tokens.accessToken);
 
       return UserResponseDto.fromDomain(user);
-    } catch (error) {
-      throw ErrorMapper.toHttp(error);
-    }
-  }
-
-  @ApiOperation({
-    summary: 'Register user account',
-    description: 'Register a new user account from admin panel.',
-  })
-  @ApiBody({ type: RegisterDto })
-  @ApiResponse({
-    status: 201,
-    description: 'Information about the saved user',
-    type: UserResponseDto,
-  })
-  @HttpCode(201)
-  @Roles(UserRole.ADMIN)
-  @UseGuards(AccessTokenGuard, RolesGuard)
-  @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    try {
-      const user = await this.registerUseCase.execute(registerDto);
-      return user;
     } catch (error) {
       throw ErrorMapper.toHttp(error);
     }

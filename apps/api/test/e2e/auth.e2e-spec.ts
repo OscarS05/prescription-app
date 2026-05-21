@@ -1,5 +1,4 @@
 import { INestApplication } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import request, { Response } from 'supertest';
 import cookieParser from 'cookie-parser';
 import * as bcrypt from 'bcrypt';
@@ -9,7 +8,6 @@ import { PrismaService } from '../../src/shared/infrastructure/prisma/prisma.ser
 import { UserResponseDto } from '../../src/modules/identity/infrastructure/dtos/auth.dto';
 import { getTokensFromCookies } from './helpers/cookie.helper';
 import { adminEmailSeed, adminPassSeed } from '../../prisma/seeders/admin.seed';
-import { doctorEmailSeed, doctorPassSeed } from '../../prisma/seeders/doctor.seed';
 import { createTestApp } from './app.e2e';
 
 describe('AuthController (e2e)', () => {
@@ -84,39 +82,6 @@ describe('AuthController (e2e)', () => {
           password: 'wrong-password',
         })
         .expect(401);
-    });
-  });
-
-  describe('/auth/register', () => {
-    it('should register user successfully', async () => {
-      const response = await request(server)
-        .post('/auth/register')
-        .set('Cookie', accessCookie)
-        .send({
-          email: 'newpatient@test.com',
-          password: 'password123@',
-          role: 'patient',
-          documentType: 'cc',
-          documentNumber: '999999',
-        })
-        .expect(201);
-      const body = response.body as UserResponseDto;
-      expect(body.email).toBe('newpatient@test.com');
-    });
-
-    it('should fail with a role not allowed', async () => {
-      const invalidCookie = new JwtService().sign(
-        { sub: 'admin-id', role: 'doctor' },
-        { secret: process.env['JWT_ACCESS_SECRET'], expiresIn: '15m' },
-      );
-      await request(server)
-        .post('/auth/register')
-        .set('Cookie', `accessToken=${invalidCookie}`)
-        .send({
-          email: doctorEmailSeed,
-          password: doctorPassSeed,
-        })
-        .expect(403);
     });
   });
 

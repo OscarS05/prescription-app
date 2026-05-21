@@ -13,7 +13,7 @@ import { LoginUseCase } from './application/use-cases/login/login.use-case';
 import { GetUserInfoUseCase } from './application/use-cases/get-user-info/get-user-info.use-case';
 import { LogoutUseCase } from './application/use-cases/logout/logout.use-case';
 import { RefreshSessionUseCase } from './application/use-cases/refresh-session/refresh-session.use-case';
-import { RegisterUserUseCase } from './application/use-cases/regiser-user/register-user.use-case';
+import { CreateUserUseCase } from './application/use-cases/create-user/create-user.use-case';
 import { UserRepository } from './domain/ports/user.repository';
 import { UserRepositoryPrismaAdapter } from './infrastructure/db/user.repository';
 import { DoctorRepository } from './domain/ports/doctor.repository';
@@ -38,7 +38,7 @@ import { GetUsersUseCase } from './application/use-cases/get-users/get-users.use
     GetUserInfoUseCase,
     LogoutUseCase,
     RefreshSessionUseCase,
-    RegisterUserUseCase,
+    CreateUserUseCase,
     SessionManagerService,
     GetUsersUseCase,
   ],

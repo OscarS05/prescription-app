@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { RegisterUserUseCase } from './register-user.use-case';
+import { CreateUserUseCase } from './create-user.use-case';
 import { EmailAlreadyInUseError } from '../../../domain/errors/auth.errors';
 import { UserRole } from '../../../domain/enums/roles.enum';
 
-describe('RegisterUserUseCase', () => {
-  let useCase: RegisterUserUseCase;
+describe('CreateUserUseCase', () => {
+  let useCase: CreateUserUseCase;
 
   const usersRepo = {
     findByEmail: jest.fn(),
@@ -26,7 +26,7 @@ describe('RegisterUserUseCase', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    useCase = new RegisterUserUseCase(
+    useCase = new CreateUserUseCase(
       hashService as any,
       usersRepo as any,
       patientRepo as any,
