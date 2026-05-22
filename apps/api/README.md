@@ -154,7 +154,7 @@ The application is organized into the following feature modules:
 | Module          | Path                        | Description                                           |
 | --------------- | --------------------------- | ----------------------------------------------------- |
 | `identity`      | `src/modules/identity`      | Authentication, session management, and user identity |
-| `prescriptions` | `src/modules/prescriptions` | Prescription management (in progress)                 |
+| `prescriptions` | `src/modules/prescriptions` | Prescription management                               |
 
 ---
 
@@ -205,11 +205,11 @@ Authentication is session-based using **JWT access and refresh tokens** delivere
 
 ### Flow
 
-1. **Register** — `POST /auth/register` — creates a new user account FROM ADMIN PANEL. This was misnamed, it should be called POST /users.
+1. **Create users** — `POST /admin/users` — creates a new user account FROM ADMIN PANEL. This was misnamed, it should be called POST /users.
 2. **Login** — `POST /auth/login` — validates credentials, issues an access token (short-lived) and a refresh token (long-lived) as cookies.
 3. **Refresh** — `POST /auth/refresh` — uses the refresh token cookie to issue a new access token.
-4. **Logout** — `POST /auth/logout` — invalidates the refresh token and clears cookies.
-5. **Get current user** — `GET /users` — returns a list of users.
+4. **Logout** — `DELETE /auth/session` — invalidates the refresh token and clears cookies.
+5. **Get current user** — `GET /users` — returns a list of users from admin panel.
 
 ### Tokens
 
@@ -294,27 +294,47 @@ DTOs are defined per module under `infrastructure/dtos/`. Incoming payloads are 
 
 ---
 
-# API Endpoints
+# API Overview
 
-Base URL: `http://localhost:{PORT}`
+## Docs
 
-### Auth — `/auth`
+Complete API documentation is available through Swagger:
 
-| Method | Path             | Auth          | Description              |
-| ------ | ---------------- | ------------- | ------------------------ |
-| `POST` | `/auth/register` | Public        | Register a new user      |
-| `POST` | `/auth/login`    | Public        | Login and receive tokens |
-| `POST` | `/auth/logout`   | Access Token  | Logout and clear tokens  |
-| `POST` | `/auth/refresh`  | Refresh Token | Refresh access token     |
-| `GET`  | `/users`         | Access Token  | List of users            |
+```txt
+/api/docs
+```
 
-### Users — `/users`
+## Auth
 
-| Method | Path     | Auth         | Role  | Description    |
-| ------ | -------- | ------------ | ----- | -------------- |
-| `GET`  | `/users` | Access Token | ADMIN | List all users |
+```txt
+POST   /auth/login
+POST   /auth/refresh
+DELETE /auth/session
+```
 
-> Prescription and user management endpoints are coming soon.
+## Me
+
+```txt
+GET /me/profile
+GET /me/prescriptions
+```
+
+## Admin
+
+```txt
+POST /admin/users
+GET  /admin/users
+GET  /admin/prescriptions
+GET  /admin/metrics
+```
+
+## Prescriptions
+
+```txt
+POST  /prescriptions
+GET   /prescriptions/:id
+PATCH /prescriptions/:id
+```
 
 ---
 
