@@ -8,7 +8,7 @@ import { UserInfo } from '../../domain/types/auth.types';
 import { AccessTokenGuard } from '../../../../shared/infrastructure/guards/accessToken.guard';
 import { RolesGuard } from '../../../../shared/infrastructure/guards/roles.guard';
 import { Roles } from '../../../../shared/infrastructure/decorators/roles.decorator';
-import { UserRole } from '../../domain/enums/roles.enum';
+import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { CreateUserUseCase } from '../../application/use-cases/create-user/create-user.use-case';
 
 @Controller('users')

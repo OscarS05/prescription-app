@@ -6,7 +6,7 @@ import {
   DomainNotFoundError,
 } from '../../../domain/errors/auth.errors';
 
-import { UserRole } from '../../../domain/enums/roles.enum';
+import { UserRole } from '../../../../../shared/domain/enums/roles.enum';
 
 describe('LoginUseCase', () => {
   let useCase: LoginUseCase;

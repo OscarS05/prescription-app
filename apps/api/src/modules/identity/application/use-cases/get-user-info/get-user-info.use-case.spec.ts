@@ -4,7 +4,7 @@ import { GetUserInfoUseCase } from './get-user-info.use-case';
 
 import { UserRepository } from '../../../domain/ports/user.repository';
 import { DomainNotFoundError } from '../../../domain/errors/auth.errors';
-import { UserRole } from '../../../domain/enums/roles.enum';
+import { UserRole } from '../../../../../shared/domain/enums/roles.enum';
 
 describe('GetUserInfoUseCase', () => {
   let useCase: GetUserInfoUseCase;

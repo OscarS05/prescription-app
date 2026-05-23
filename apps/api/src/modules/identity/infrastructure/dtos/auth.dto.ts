@@ -11,7 +11,7 @@ import {
   Matches,
 } from 'class-validator';
 import type { DocumentType, UserInfo } from '../../domain/types/auth.types';
-import { UserRole } from '../../domain/enums/roles.enum';
+import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { DoctorDto, DoctorResponseDto } from './doctor.dto';
 import { PatientDto, PatientResponseDto } from './patient.dto';
 

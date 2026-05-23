@@ -1,6 +1,6 @@
 import { Doctor, Patient, User as UserORM } from '@prisma/client';
 import { User as UserEntity } from '../../domain/types/auth.types';
-import { UserRole } from '../../domain/enums/roles.enum';
+import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 
 type UserORMWithRelations = UserORM & {
   doctor?: Doctor | null;

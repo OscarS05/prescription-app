@@ -2,7 +2,7 @@
 import { GetUsersUseCase } from './get-users.use-case';
 import { UserRepository } from '../../../domain/ports/user.repository';
 import { QueryParams, User } from '../../../domain/types/auth.types';
-import { UserRole } from '../../../domain/enums/roles.enum';
+import { UserRole } from '../../../../../shared/domain/enums/roles.enum';
 
 describe('GetUsersUseCase', () => {
   let useCase: GetUsersUseCase;

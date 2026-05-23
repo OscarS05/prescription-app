@@ -1,6 +1,6 @@
 import { Doctor } from './doctor.types';
 import { Patient } from './patient.types';
-import { UserRole } from '../enums/roles.enum';
+import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 
 export type User = {
   id: string;

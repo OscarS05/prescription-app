@@ -7,7 +7,7 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { UserRole } from '../../domain/enums/roles.enum';
+import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { Transform } from 'class-transformer';
 import { OmitType } from '@nestjs/swagger';
 

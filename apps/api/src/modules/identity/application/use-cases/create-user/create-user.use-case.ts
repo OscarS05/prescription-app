@@ -5,7 +5,7 @@ import { EmailAlreadyInUseError } from '../../../domain/errors/auth.errors';
 import { CredentialRegister, UserInfo } from '../../../domain/types/auth.types';
 import { PatientRepository } from '../../../domain/ports/patient.repository';
 import { DoctorRepository } from '../../../domain/ports/doctor.repository';
-import { UserRole } from '../../../domain/enums/roles.enum';
+import { UserRole } from '../../../../../shared/domain/enums/roles.enum';
 
 @Injectable()
 export class CreateUserUseCase {

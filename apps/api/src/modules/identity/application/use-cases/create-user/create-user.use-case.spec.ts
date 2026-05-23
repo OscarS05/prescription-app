@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { CreateUserUseCase } from './create-user.use-case';
 import { EmailAlreadyInUseError } from '../../../domain/errors/auth.errors';
-import { UserRole } from '../../../domain/enums/roles.enum';
+import { UserRole } from '../../../../../shared/domain/enums/roles.enum';
 
 describe('CreateUserUseCase', () => {
   let useCase: CreateUserUseCase;

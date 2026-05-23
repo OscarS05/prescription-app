@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 
 import { TokenServiceAdapter } from '../../../src/modules/identity/infrastructure/services/token.service';
-import { UserRole } from '../../../src/modules/identity/domain/enums/roles.enum';
+import { UserRole } from '../../../src/shared/domain/enums/roles.enum';
 
 describe('TokenServiceAdapter Integration', () => {
   let service: TokenServiceAdapter;
