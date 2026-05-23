@@ -108,6 +108,10 @@ jobs:
       JWT_ACCESS_TTL: 900s
       JWT_REFRESH_SECRET: secreto
       JWT_REFRESH_TTL: 7d
+      THROTTLE_GLOBAL_TTL: 60000
+      THROTTLER_GLOBAL_LIMIT: 100
+      THROTTLE_AUTH_TTL: 60000
+      THROTTLER_AUTH_LIMIT: 5
 
     services:
       postgre-e2e:
