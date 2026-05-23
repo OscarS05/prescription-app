@@ -1,14 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import request, { Response } from 'supertest';
-import cookieParser from 'cookie-parser';
 import * as bcrypt from 'bcrypt';
 import { Server } from 'http';
 
-import { PrismaService } from '../../src/shared/infrastructure/prisma/prisma.service';
-import { UserResponseDto } from '../../src/modules/identity/infrastructure/dtos/auth.dto';
-import { getTokensFromCookies } from './helpers/cookie.helper';
-import { adminEmailSeed, adminPassSeed } from '../../prisma/seeders/admin.seed';
-import { createTestApp } from './app.e2e';
+import { PrismaService } from '../../../src/shared/infrastructure/prisma/prisma.service';
+import { UserResponseDto } from '../../../src/modules/identity/infrastructure/dtos/auth.dto';
+import { getTokensFromCookies } from '../helpers/cookie.helper';
+import { adminEmailSeed, adminPassSeed } from '../../../prisma/seeders/admin.seed';
+import { createTestApp } from '../app.e2e';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -22,7 +21,6 @@ describe('AuthController (e2e)', () => {
     app = await createTestApp();
     server = app.getHttpServer() as Server;
 
-    app.use(cookieParser());
     prismaService = app.get(PrismaService);
 
     await prismaService.$connect();
@@ -99,25 +97,6 @@ describe('AuthController (e2e)', () => {
 
     it('should fail without refresh token', async () => {
       await request(server).post('/auth/refresh').expect(401);
-    });
-  });
-
-  describe('/auth/profile', () => {
-    it('should get current user profile', async () => {
-      const response = await request(server)
-        .get('/auth/profile')
-        .set('Cookie', accessCookie)
-        .expect(200);
-
-      const body = response.body as UserResponseDto;
-      expect(body.email).toBe(adminEmailSeed);
-      expect(body.doctor).toBeDefined();
-      expect(body.doctor?.userId).toBeDefined();
-      expect(body.doctor?.createdAt).toBeDefined();
-    });
-
-    it('should fail without access token', async () => {
-      await request(server).get('/auth/profile').expect(401);
     });
   });
 

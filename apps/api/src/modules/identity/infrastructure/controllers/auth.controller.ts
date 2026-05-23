@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Post,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, HttpCode, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Response } from 'express';
 
@@ -22,7 +13,6 @@ import { AccessTokenGuard } from '../../../../shared/infrastructure/guards/acces
 import { CurrentUser } from '../../../../shared/infrastructure/decorators/currentUser.decorator';
 import type { PayloadToken } from '../../domain/types/auth.types';
 import { ErrorMapper } from '../mappers/error.mapper';
-import { GetUserInfoUseCase } from '../../application/use-cases/get-user-info/get-user-info.use-case';
 import { RefreshTokenGuard } from '../../../../shared/infrastructure/guards/refreshToken.guard';
 
 @Controller('auth')
@@ -31,7 +21,6 @@ export class AuthController {
     private readonly loginUseCase: LoginUseCase,
     private readonly refreshSessionUseCase: RefreshSessionUseCase,
     private readonly logoutUseCase: LogoutUseCase,
-    private readonly getUserInfoUseCase: GetUserInfoUseCase,
   ) {}
 
   @ApiOperation({
@@ -104,26 +93,6 @@ export class AuthController {
       await this.logoutUseCase.execute(user);
       clearCookie(res, 'refreshToken');
       clearCookie(res, 'accessToken');
-    } catch (error) {
-      throw ErrorMapper.toHttp(error);
-    }
-  }
-
-  @ApiOperation({
-    summary: 'User information',
-    description: 'Get the information of the current user',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Information about the current user',
-    type: UserResponseDto,
-  })
-  @HttpCode(200)
-  @UseGuards(AccessTokenGuard)
-  @Get('profile')
-  async getUser(@CurrentUser() user: PayloadToken) {
-    try {
-      return this.getUserInfoUseCase.execute(user.sub);
     } catch (error) {
       throw ErrorMapper.toHttp(error);
     }

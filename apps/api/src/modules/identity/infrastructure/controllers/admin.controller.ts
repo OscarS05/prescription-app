@@ -11,8 +11,8 @@ import { Roles } from '../../../../shared/infrastructure/decorators/roles.decora
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { CreateUserUseCase } from '../../application/use-cases/create-user/create-user.use-case';
 
-@Controller('users')
-export class UsersController {
+@Controller('admin')
+export class AdminController {
   constructor(
     private readonly getUsersUseCase: GetUsersUseCase,
     private readonly createUserUseCase: CreateUserUseCase,
@@ -30,7 +30,7 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RolesGuard)
   @HttpCode(200)
-  @Get()
+  @Get('users')
   async getUsers(@Query() query: QueryParam): Promise<QueryResponse<UserInfo>> {
     try {
       const result = await this.getUsersUseCase.execute({
@@ -60,8 +60,8 @@ export class UsersController {
   @HttpCode(201)
   @Roles(UserRole.ADMIN)
   @UseGuards(AccessTokenGuard, RolesGuard)
-  @Post()
-  async create(@Body() registerDto: RegisterDto) {
+  @Post('users')
+  async create(@Body() registerDto: RegisterDto): Promise<UserInfo> {
     try {
       const user = await this.createUserUseCase.execute(registerDto);
       return user;
