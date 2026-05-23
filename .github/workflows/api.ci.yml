@@ -40,7 +40,8 @@ jobs:
         run: npm ci
 
       - name: Generate Prisma Client
-        run: npx prisma generate --schema=./apps/api/prisma.config
+        run: npx prisma generate
+        working-directory: ./apps/api
 
       - name: Run linter
         run: npm run lint:api
@@ -88,7 +89,8 @@ jobs:
         working-directory: .
 
       - name: Generate Prisma Client
-        run: npx prisma generate --schema=./apps/api/prisma.config
+        run: npx prisma generate
+        working-directory: ./apps/api
 
       - name: Run migrations
         run: npm run migration:test:api
@@ -138,7 +140,8 @@ jobs:
         working-directory: .
 
       - name: Generate Prisma Client
-        run: npx prisma generate --schema=./apps/api/prisma.config
+        run: npx prisma generate
+        working-directory: ./apps/api
 
       - name: Run migrations
         run: npm run migration:test:api
