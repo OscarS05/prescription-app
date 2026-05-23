@@ -14,7 +14,14 @@ import { CurrentUser } from '../../../../shared/infrastructure/decorators/curren
 import type { PayloadToken } from '../../domain/types/auth.types';
 import { ErrorMapper } from '../mappers/error.mapper';
 import { RefreshTokenGuard } from '../../../../shared/infrastructure/guards/refreshToken.guard';
+import { Throttle } from '@nestjs/throttler';
 
+@Throttle({
+  default: {
+    limit: 5,
+    ttl: 60000,
+  },
+})
 @Controller('auth')
 export class AuthController {
   constructor(

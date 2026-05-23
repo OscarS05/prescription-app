@@ -11,4 +11,10 @@ export interface Env {
   JWT_ACCESS_TTL: string;
   JWT_REFRESH_SECRET: string;
   JWT_REFRESH_TTL: string;
+
+  // Rate limiting
+  THROTTLE_GLOBAL_TTL: number;
+  THROTTLER_GLOBAL_LIMIT: number;
+  THROTTLE_AUTH_TTL: number;
+  THROTTLER_AUTH_LIMIT: number;
 }

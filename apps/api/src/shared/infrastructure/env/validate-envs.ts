@@ -13,4 +13,10 @@ export const validationSchema = Joi.object({
   JWT_ACCESS_TTL: Joi.string().required(),
   JWT_REFRESH_SECRET: Joi.string().required(),
   JWT_REFRESH_TTL: Joi.string().required(),
+
+  // Rate limiting
+  THROTTLE_GLOBAL_TTL: Joi.number().required(),
+  THROTTLER_GLOBAL_LIMIT: Joi.number().required(),
+  THROTTLE_AUTH_TTL: Joi.number().required(),
+  THROTTLER_AUTH_LIMIT: Joi.number().required(),
 });

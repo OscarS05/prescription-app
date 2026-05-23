@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import './shared/infrastructure/env/env';
 
 import { AppModule } from './app.module';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -40,6 +41,7 @@ async function bootstrap() {
     origin: '*',
   });
   app.use(cookieParser());
+  app.use(helmet());
 
   await app.listen(process.env.PORT ?? 3000);
 }
