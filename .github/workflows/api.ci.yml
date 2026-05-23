@@ -4,17 +4,17 @@ on:
   push:
     branches:
       - main
-      - develop
+      - dev
     paths:
       - "apps/api/**"
       - "packages/**"
       - "package.json"
       - "package-lock.json"
-      - ".github/workflows/api-ci.yml"
+      - ".github/workflows/api.ci.yml"
   pull_request:
     branches:
       - main
-      - develop
+      - dev
     paths:
       - "apps/api/**"
       - "packages/**"
