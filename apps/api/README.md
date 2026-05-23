@@ -237,7 +237,7 @@ The API uses **Role-Based Access Control** enforced via the `RolesGuard`.
 
 ### Roles
 
-Defined in `src/modules/identity/domain/enums/roles.enum.ts`:
+Defined in `src/shared/domain/enums/roles.enum.ts`:
 
 | Role      | Description                         |
 | --------- | ----------------------------------- |
@@ -334,6 +334,8 @@ GET  /admin/metrics
 POST  /prescriptions
 GET   /prescriptions/:id
 PATCH /prescriptions/:id
+PATCH /prescriptions/:id/status
+DELETE /prescriptions/:id
 ```
 
 ---

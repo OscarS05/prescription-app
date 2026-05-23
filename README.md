@@ -236,15 +236,6 @@ See [`apps/api/README.md`](./apps/api/README.md#authorization-rbac) for details.
 
 # API Endpoints
 
-| Method | Path             | Description                 |
-| ------ | ---------------- | --------------------------- |
-| `POST` | `/auth/register` | Register a new user         |
-| `POST` | `/auth/login`    | Login                       |
-| `POST` | `/auth/logout`   | Logout                      |
-| `POST` | `/auth/refresh`  | Refresh access token        |
-| `GET`  | `/auth/me`       | Get current user            |
-| `GET`  | `/users`         | List all users (Admin only) |
-
 See [`apps/api/README.md`](./apps/api/README.md#api-endpoints) for the full endpoint reference.
 
 ---
