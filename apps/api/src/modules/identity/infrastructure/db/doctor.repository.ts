@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../shared/infrastructure/prisma/prisma.service';
-import { DocumentType } from '@prisma/client';
 import { DoctorRepository } from '../../domain/ports/doctor.repository';
 import { CreateDoctor, Doctor } from '../../domain/types/doctor.types';
 import { DoctorMapper } from '../mappers/doctor.mapper';
