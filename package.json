@@ -9,7 +9,12 @@
   "scripts": {
     "dev:api": "npm run start:dev -w api",
     "dev:web": "npm run dev -w web",
-    "build": "npm run dev --workspaces"
+    "build": "npm run dev --workspaces",
+    "migration:test:api": "npm run db:test:migrate -w api",
+    "lint:api": "npm run lint -w api",
+    "test:unit:api": "npm run test -w api",
+    "test:int:api": "npm run test:int -w api",
+    "test:e2e:api": "npm run test:e2e -w api"
   },
   "repository": {
     "type": "git",

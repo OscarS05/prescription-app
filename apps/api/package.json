@@ -21,7 +21,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "db:test:reset": "NODE_ENV=test prisma migrate reset --force",
     "db:test:migrate": "NODE_ENV=test prisma migrate deploy",
-    "db:dev:migrate": "NODE_ENV=test prisma migrate dev",
+    "db:dev:migrate": "NODE_ENV=dev prisma migrate dev",
     "db:local:seed": "prisma db seed",
     "db:test:seed": "NODE_ENV=test prisma db seed"
   },
