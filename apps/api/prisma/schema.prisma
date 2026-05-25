@@ -77,6 +77,7 @@ model Prescription {
   status        PrescriptionStatus
   notes         String?               @db.VarChar(255)
   createdAt     DateTime              @default(now()) @map("created_at")
+  updatedAt     DateTime              @updatedAt @map("updated_at")
   consumedAt    DateTime?             @map("consumed_at")
   deletedAt     DateTime?             @map("deleted_at")
 

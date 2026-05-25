@@ -8,37 +8,39 @@ type UserIds = {
 };
 
 export async function seedPrescriptions(ids: UserIds) {
+  const currentYear = new Date().getFullYear().toString();
+
   const prescriptions = [
     {
-      code: 'RX-001',
+      code: currentYear + '-001',
       status: PrescriptionStatus.pending,
     },
     {
-      code: 'RX-002',
+      code: currentYear + '-002',
       status: PrescriptionStatus.pending,
     },
     {
-      code: 'RX-003',
+      code: currentYear + '-003',
       status: PrescriptionStatus.consumed,
     },
     {
-      code: 'RX-004',
+      code: currentYear + '-004',
       status: PrescriptionStatus.pending,
     },
     {
-      code: 'RX-005',
+      code: currentYear + '-005',
       status: PrescriptionStatus.consumed,
     },
     {
-      code: 'RX-006',
+      code: currentYear + '-006',
       status: PrescriptionStatus.pending,
     },
     {
-      code: 'RX-007',
+      code: currentYear + '-007',
       status: PrescriptionStatus.consumed,
     },
     {
-      code: 'RX-008',
+      code: currentYear + '-008',
       status: PrescriptionStatus.pending,
     },
   ];
@@ -63,6 +65,7 @@ export async function seedPrescriptions(ids: UserIds) {
         patientId: ids.patientId || '',
         consumedAt:
           prescriptionData.status === PrescriptionStatus.consumed ? new Date() : null,
+        updatedAt: new Date(),
         items: {
           create: [
             {
