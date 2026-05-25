@@ -32,6 +32,7 @@ describe('CreatePrescriptionUseCase', () => {
     code: '2026-124',
     status: PrescriptionStatus.PENDING,
     consumedAt: new Date(),
+    updatedAt: new Date(),
     createdAt: new Date(),
   };
 

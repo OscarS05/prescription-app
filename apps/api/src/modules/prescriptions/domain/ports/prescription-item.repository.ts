@@ -2,5 +2,5 @@ import { PrescriptionItem, UpdatePrescriptionItem } from '../types/prescription-
 
 export abstract class PrescriptionItemRepository {
   abstract create(data: PrescriptionItem[]): Promise<PrescriptionItem[]>;
-  abstract update(id: string, data: UpdatePrescriptionItem): Promise<PrescriptionItem>;
+  abstract update(data: UpdatePrescriptionItem[]): Promise<PrescriptionItem[]>;
 }

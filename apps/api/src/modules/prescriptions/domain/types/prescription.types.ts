@@ -10,6 +10,7 @@ export type Prescription = {
   notes: string | null;
   createdAt: Date;
   consumedAt: Date;
+  updatedAt: Date;
   deletedAt?: Date | null;
 
   items?: PrescriptionItem[];
@@ -17,7 +18,7 @@ export type Prescription = {
 
 export type CreatePrescription = Omit<
   Prescription,
-  'id' | 'createdAt' | 'consumedAt' | 'deletedAt' | 'items'
+  'id' | 'createdAt' | 'updatedAt' | 'consumedAt' | 'deletedAt' | 'items'
 >;
 
-export type UpdatePrescription = Partial<Pick<Prescription, 'status' | 'notes'>>;
+export type UpdatePrescription = Partial<Pick<Prescription, 'notes'>>;

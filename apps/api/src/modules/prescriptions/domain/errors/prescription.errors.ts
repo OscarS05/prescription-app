@@ -12,6 +12,13 @@ export class PrescriptionCodeError extends Error {
   }
 }
 
+export class DoctorIdDoesNotBelongError extends Error {
+  constructor(message?: string) {
+    super(message || 'Prescription ID does not belong to the doctor');
+    this.name = 'DoctorIdDoesNotBelongError';
+  }
+}
+
 export class DomainInternalError extends Error {
   constructor(message?: string) {
     super(message || 'Internal server error');
