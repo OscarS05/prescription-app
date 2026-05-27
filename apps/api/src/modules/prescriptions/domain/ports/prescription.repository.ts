@@ -13,5 +13,5 @@ export abstract class PrescriptionRepository {
   abstract findAllByDoctorId(doctorId: string): Promise<Prescription[]>;
   abstract findAllByPatientId(patientId: string): Promise<Prescription[]>;
   abstract findOne(key: string): Promise<Prescription | null>;
-  abstract findOneOrFail(key: string): Promise<Prescription>;
+  abstract findOneOrFail(key: string, includeItems?: boolean): Promise<Prescription>;
 }
