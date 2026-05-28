@@ -12,6 +12,7 @@ import {
   PrescriptionItemConflictError,
   PrescriptionItemIdDoesNotMatchError,
 } from '../../../domain/errors/prescription-item.errors';
+import { UnitOfWorkService } from '../../../../../shared/domain/ports/unit-of-work.service';
 
 type Props = UpdatePrescription & {
   items?: Partial<Omit<PrescriptionItem, 'prescriptionId'>>[];
@@ -22,6 +23,7 @@ export class EditPrescriptionUseCase {
   constructor(
     private readonly prescriptionRepo: PrescriptionRepository,
     private readonly prescriptionItemRepo: PrescriptionItemRepository,
+    private readonly unitOfWork: UnitOfWorkService,
   ) {}
 
   public async execute(id: string, doctorId: string, changes: Props): Promise<Prescription> {
@@ -35,13 +37,15 @@ export class EditPrescriptionUseCase {
     const hasInvalidIds = changes.items?.some((item) => item.id && !dbItemIds.has(item.id));
     if (hasInvalidIds) throw new PrescriptionItemIdDoesNotMatchError();
 
-    if (changes.notes) {
-      await this.prescriptionRepo.update(id, { notes: changes.notes });
-    }
+    await this.unitOfWork.execute(async () => {
+      if (changes.notes) {
+        await this.prescriptionRepo.update(id, { notes: changes.notes });
+      }
 
-    if (changes.items?.length) {
-      await this.prescriptionItemRepo.update(changes.items);
-    }
+      if (changes.items?.length) {
+        await this.prescriptionItemRepo.update(changes.items);
+      }
+    });
 
     return await this.prescriptionRepo.findOneOrFail(id, true);
   }

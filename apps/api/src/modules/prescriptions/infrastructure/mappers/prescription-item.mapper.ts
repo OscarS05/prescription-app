@@ -9,7 +9,7 @@ export class PrescriptionItemMapper {
       name: data.name,
       dosage: data.dosage,
       instructions: data.instructions,
-      quantity: data.dosage,
+      quantity: data.quantity,
     };
   }
 }

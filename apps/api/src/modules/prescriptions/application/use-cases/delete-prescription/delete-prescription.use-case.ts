@@ -5,16 +5,10 @@ import {
   CannotDeleteConsumedPrescriptionError,
   PrescriptionDoesNotBelongToDoctorError,
 } from '../../../domain/errors/prescription.errors';
-import { PrescriptionItemRepository } from '../../../domain/ports/prescription-item.repository';
-import { UnitOfWorkService } from '../../../../../shared/domain/ports/unit-of-work.service';
 
 @Injectable()
 export class DeletePrescriptionUseCase {
-  constructor(
-    private readonly prescriptionRepo: PrescriptionRepository,
-    private readonly prescriptionItemRepo: PrescriptionItemRepository,
-    private readonly transaction: UnitOfWorkService,
-  ) {}
+  constructor(private readonly prescriptionRepo: PrescriptionRepository) {}
 
   public async execute(id: string, doctorId: string): Promise<void> {
     const prescription = await this.prescriptionRepo.findOneOrFail(id, true);
@@ -27,12 +21,7 @@ export class DeletePrescriptionUseCase {
       throw new CannotDeleteConsumedPrescriptionError();
     }
 
-    await this.transaction.execute(async () => {
-      await this.prescriptionRepo.delete(id);
-
-      if (prescription.items?.length) {
-        await this.prescriptionItemRepo.delete(prescription.items?.map((item) => item.id));
-      }
-    });
+    // Only delete the prescription because the precription item model does not have soft delete
+    await this.prescriptionRepo.delete(id);
   }
 }

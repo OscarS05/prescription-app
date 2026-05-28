@@ -3,8 +3,9 @@ export type PrescriptionItem = {
   prescriptionId: string;
   name: string;
   dosage: string | null;
-  quantity: string | null;
+  quantity: number | null;
   instructions: string | null;
 };
 
-export type UpdatePrescriptionItem = Partial<Omit<PrescriptionItem, 'id' | 'prescriptionId'>>;
+export type CreatePrescriptionItem = Omit<PrescriptionItem, 'id'>;
+export type UpdatePrescriptionItem = Partial<Omit<PrescriptionItem, 'prescriptionId'>>;
