@@ -56,12 +56,24 @@ describe('EditPrescriptionUseCase', () => {
     quantity: 5,
   };
 
+  const transaction = {
+    execute: jest.fn(),
+  };
+
+  beforeAll(() => {
+    transaction.execute.mockImplementation((callback) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+      return callback();
+    });
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
 
     useCase = new EditPrescriptionUseCase(
       prescriptionRepo as any,
       prescriptionItemRepo as any,
+      transaction,
     );
   });
 
@@ -74,6 +86,7 @@ describe('EditPrescriptionUseCase', () => {
 
       expect(prescriptionRepo.findOneOrFail).toHaveBeenCalledTimes(2);
       expect(prescriptionRepo.update).toHaveBeenCalledTimes(1);
+      expect(transaction.execute).toHaveBeenCalledTimes(1);
       expect(prescriptionItemRepo.update).not.toHaveBeenCalled();
       expect(result.id).toBe(useCaseResponse.id);
       expect(result.items).not.toBeDefined();
@@ -96,6 +109,7 @@ describe('EditPrescriptionUseCase', () => {
       expect(prescriptionRepo.findOneOrFail).toHaveBeenCalledTimes(2);
       expect(prescriptionRepo.update).toHaveBeenCalledTimes(1);
       expect(prescriptionItemRepo.update).toHaveBeenCalledTimes(1);
+      expect(transaction.execute).toHaveBeenCalledTimes(1);
       expect(result.id).toBe(useCaseResponse.id);
       expect(result.items?.length).toBe(2);
       expect(result.notes).toBe(useCaseResponse.notes);

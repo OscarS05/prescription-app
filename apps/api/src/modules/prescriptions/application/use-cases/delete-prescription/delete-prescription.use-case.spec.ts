@@ -17,15 +17,6 @@ describe('DeletePrescriptionUseCase', () => {
     findOneOrFail: jest.fn(),
   };
 
-  const prescriptionItemRepo = {
-    update: jest.fn(),
-    delete: jest.fn(),
-  };
-
-  const transaction = {
-    execute: jest.fn(),
-  };
-
   const prescriptionId = 'prescription-id';
   const doctorId = 'doctor-id';
 
@@ -50,21 +41,10 @@ describe('DeletePrescriptionUseCase', () => {
     quantity: 5,
   };
 
-  beforeAll(() => {
-    transaction.execute.mockImplementation((callback) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-      return callback();
-    });
-  });
-
   beforeEach(() => {
     jest.clearAllMocks();
 
-    useCase = new DeletePrescriptionUseCase(
-      prescriptionRepo as any,
-      prescriptionItemRepo as any,
-      transaction,
-    );
+    useCase = new DeletePrescriptionUseCase(prescriptionRepo as any);
   });
 
   describe('Successful cases', () => {
@@ -75,9 +55,7 @@ describe('DeletePrescriptionUseCase', () => {
       const result = await useCase.execute(prescriptionId, doctorId);
 
       expect(prescriptionRepo.findOneOrFail).toHaveBeenCalledTimes(1);
-      expect(transaction.execute).toHaveBeenCalledTimes(1);
       expect(prescriptionRepo.delete).toHaveBeenCalledTimes(1);
-      expect(prescriptionItemRepo.delete).not.toHaveBeenCalled();
       expect(result).toBeUndefined();
     });
 
@@ -91,9 +69,7 @@ describe('DeletePrescriptionUseCase', () => {
       const result = await useCase.execute(prescriptionId, doctorId);
 
       expect(prescriptionRepo.findOneOrFail).toHaveBeenCalledTimes(1);
-      expect(transaction.execute).toHaveBeenCalledTimes(1);
       expect(prescriptionRepo.delete).toHaveBeenCalledTimes(1);
-      expect(prescriptionItemRepo.delete).toHaveBeenCalledTimes(1);
       expect(result).toBeUndefined();
     });
   });

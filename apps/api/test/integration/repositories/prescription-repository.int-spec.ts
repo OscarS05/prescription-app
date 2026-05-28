@@ -23,9 +23,7 @@ describe('PrismaPrescriptionRepository Integration', () => {
 
     repository = module.get(PrismaPrescriptionRepository);
     prisma = module.get(PrismaService);
-  });
 
-  beforeEach(async () => {
     doctorId = await seedDoctor();
     patientId = await seedPatient();
   });
@@ -33,21 +31,7 @@ describe('PrismaPrescriptionRepository Integration', () => {
   afterEach(async () => {
     await prisma.prescriptionItem.deleteMany();
 
-    await prisma.prescription.deleteMany({
-      where: {
-        code: {
-          contains: 'INT',
-        },
-      },
-    });
-
-    await prisma.user.deleteMany({
-      where: {
-        email: {
-          contains: '@integration.test',
-        },
-      },
-    });
+    await prisma.prescription.deleteMany();
   });
 
   afterAll(async () => {
