@@ -39,7 +39,7 @@ describe('GetUsersUseCase', () => {
       page: 1,
       query: 'test',
       order: 'DESC',
-      role: UserRole.DOCTOR,
+      roles: [UserRole.DOCTOR],
     };
 
     const result = await useCase.execute(query);
@@ -49,7 +49,8 @@ describe('GetUsersUseCase', () => {
       limit: 10,
       offset: 0,
       query: 'test',
-      roles: query.role,
+      order: 'DESC',
+      roles: [UserRole.DOCTOR],
     });
 
     expect(result).toEqual({
@@ -68,7 +69,7 @@ describe('GetUsersUseCase', () => {
       limit: 10,
       page: 1,
       query: '',
-      role: UserRole.DOCTOR,
+      roles: [UserRole.DOCTOR],
       order: 'DESC',
     };
 
@@ -78,7 +79,8 @@ describe('GetUsersUseCase', () => {
       limit: 10,
       offset: 0,
       query: '',
-      roles: UserRole.DOCTOR,
+      order: 'DESC',
+      roles: [UserRole.DOCTOR],
     });
 
     expect(result).toEqual({
@@ -97,7 +99,7 @@ describe('GetUsersUseCase', () => {
       limit: 100,
       page: 1,
       query: '',
-      role: UserRole.DOCTOR,
+      roles: [UserRole.DOCTOR],
       order: 'DESC',
     };
 
@@ -107,7 +109,8 @@ describe('GetUsersUseCase', () => {
       limit: 15,
       offset: 0,
       query: '',
-      roles: UserRole.DOCTOR,
+      order: 'DESC',
+      roles: [UserRole.DOCTOR],
     });
   });
 
@@ -118,7 +121,7 @@ describe('GetUsersUseCase', () => {
       limit: 10,
       page: 3,
       query: '',
-      role: UserRole.DOCTOR,
+      roles: [UserRole.DOCTOR],
       order: 'DESC',
     };
 
@@ -128,7 +131,8 @@ describe('GetUsersUseCase', () => {
       limit: 10,
       offset: 20,
       query: '',
-      roles: UserRole.DOCTOR,
+      order: 'DESC',
+      roles: [UserRole.DOCTOR],
     });
   });
 
@@ -139,7 +143,7 @@ describe('GetUsersUseCase', () => {
       limit: 10,
       page: 1,
       query: '',
-      role: UserRole.DOCTOR,
+      roles: [UserRole.DOCTOR],
       order: 'DESC',
     };
 
