@@ -26,15 +26,15 @@ export type UserResponse = {
   tokens: Tokens;
 };
 
-export type QueryParams = { role: UserRole[]; query: string; limit: number; page: number };
-export type QueryRequest = {
-  offset: number;
-  limit: number;
-  query: string | null;
-  roles: UserRole[];
-};
-export type SearchResponse<T> = Pick<QueryRequest, 'limit'> &
-  Pick<QueryParams, 'page'> & { data: T[]; total: number; hasNextPage: boolean };
+// export type QueryParams extends QueryParams<UserRole>;
+// export type QueryRequest = {
+//   offset: number;
+//   limit: number;
+//   query: string | null;
+//   roles: UserRole[];
+// };
+// export type SearchResponse<T> = Pick<QueryRequest, 'limit'> &
+//   Pick<QueryParams, 'page'> & { data: T[]; total: number; hasNextPage: boolean };
 
 export type Tokens = {
   refreshToken: string;

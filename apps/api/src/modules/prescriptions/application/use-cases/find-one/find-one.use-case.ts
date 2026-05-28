@@ -7,6 +7,6 @@ export class FindOnePrescriptionUseCase {
   constructor(private readonly prescriptionRepo: PrescriptionRepository) {}
 
   public execute(id: string): Promise<Prescription> {
-    return this.prescriptionRepo.findOneOrFail(id);
+    return this.prescriptionRepo.findOneOrFail(id, true);
   }
 }

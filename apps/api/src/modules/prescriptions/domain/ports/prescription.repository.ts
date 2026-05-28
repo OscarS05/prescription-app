@@ -1,5 +1,6 @@
 import {
   CreatePrescription,
+  PrescriptionQuery,
   Prescription,
   UpdatePrescription,
 } from '../types/prescription.types';
@@ -10,8 +11,9 @@ export abstract class PrescriptionRepository {
   abstract delete(id: string): Promise<void>;
 
   abstract findTheLastCode(): Promise<string>;
-  abstract findAllByDoctorId(doctorId: string): Promise<Prescription[]>;
-  abstract findAllByPatientId(patientId: string): Promise<Prescription[]>;
-  abstract findOne(key: string): Promise<Prescription | null>;
-  abstract findOneOrFail(key: string, includeItems?: boolean): Promise<Prescription>;
+  abstract findAll(
+    profileId: string,
+    filters: PrescriptionQuery,
+  ): Promise<[Prescription[], number]>;
+  abstract findOneOrFail(key: string, includeItems: boolean): Promise<Prescription>;
 }
