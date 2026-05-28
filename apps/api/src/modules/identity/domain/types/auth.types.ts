@@ -1,6 +1,10 @@
 import { Doctor } from './doctor.types';
 import { Patient } from './patient.types';
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
+import {
+  QueryFilters,
+  QueryParams,
+} from '../../../../shared/domain/types/query-params.types';
 
 export type User = {
   id: string;
@@ -26,15 +30,8 @@ export type UserResponse = {
   tokens: Tokens;
 };
 
-// export type QueryParams extends QueryParams<UserRole>;
-// export type QueryRequest = {
-//   offset: number;
-//   limit: number;
-//   query: string | null;
-//   roles: UserRole[];
-// };
-// export type SearchResponse<T> = Pick<QueryRequest, 'limit'> &
-//   Pick<QueryParams, 'page'> & { data: T[]; total: number; hasNextPage: boolean };
+export type UserQueryParams = QueryParams & { role: UserRole };
+export type UserQueryFilters = QueryFilters & { roles: UserRole[] };
 
 export type Tokens = {
   refreshToken: string;

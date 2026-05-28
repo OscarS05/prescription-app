@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../../domain/ports/user.repository';
-import { QueryParams, SearchResponse, User } from '../../../domain/types/auth.types';
+import { UserQueryParams, User } from '../../../domain/types/auth.types';
+import { SearchResponse } from '../../../../../shared/domain/types/query-params.types';
 
 @Injectable()
 export class GetUsersUseCase {
   constructor(private readonly usersRepository: UserRepository) {}
 
-  public async execute(query: QueryParams): Promise<SearchResponse<User>> {
+  public async execute(query: UserQueryParams): Promise<SearchResponse<User>> {
     const normalizedLimit = Math.min(query.limit, 15);
     const offset = (query.page - 1) * normalizedLimit;
 

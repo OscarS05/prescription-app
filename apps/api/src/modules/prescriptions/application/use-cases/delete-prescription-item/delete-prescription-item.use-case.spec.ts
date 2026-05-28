@@ -63,7 +63,7 @@ describe('DeletePrescriptionItemUseCase', () => {
     it('should only delete one prescription item', async () => {
       prescriptionRepo.findOneOrFail.mockResolvedValue({
         ...useCaseResponse,
-        items: [item, anotherItemId],
+        items: [item, { ...item, id: anotherItemId }, { ...item, id: '567' }],
       });
       prescriptionItemRepo.delete.mockResolvedValue(true);
 
@@ -78,7 +78,7 @@ describe('DeletePrescriptionItemUseCase', () => {
     it('should delete several prescription items', async () => {
       prescriptionRepo.findOneOrFail.mockResolvedValue({
         ...useCaseResponse,
-        items: [item, anotherItemId],
+        items: [item, { ...item, id: anotherItemId }],
       });
       prescriptionItemRepo.delete.mockResolvedValue(useCaseResponse);
 
@@ -95,9 +95,9 @@ describe('DeletePrescriptionItemUseCase', () => {
     it('should fail if the prescription was not found', async () => {
       prescriptionRepo.findOneOrFail.mockRejectedValue(new PrescriptionNotFound());
 
-      await expect(
-        useCase.execute(doctorId, prescriptionId, [itemId, anotherItemId]),
-      ).rejects.toThrow(PrescriptionNotFound);
+      await expect(useCase.execute(doctorId, prescriptionId, [itemId])).rejects.toThrow(
+        PrescriptionNotFound,
+      );
 
       expect(prescriptionRepo.findOneOrFail).toHaveBeenCalledTimes(1);
       expect(prescriptionItemRepo.delete).not.toHaveBeenCalled();
@@ -109,9 +109,9 @@ describe('DeletePrescriptionItemUseCase', () => {
         status: 'consumed',
       });
 
-      await expect(
-        useCase.execute(doctorId, prescriptionId, [itemId, anotherItemId]),
-      ).rejects.toThrow(CannotDeleteConsumedPrescriptionError);
+      await expect(useCase.execute(doctorId, prescriptionId, [itemId])).rejects.toThrow(
+        CannotDeleteConsumedPrescriptionError,
+      );
 
       expect(prescriptionRepo.findOneOrFail).toHaveBeenCalledTimes(1);
       expect(prescriptionItemRepo.delete).not.toHaveBeenCalled();
@@ -123,9 +123,9 @@ describe('DeletePrescriptionItemUseCase', () => {
         doctorId: 'wrong-id',
       });
 
-      await expect(
-        useCase.execute(doctorId, prescriptionId, [itemId, anotherItemId]),
-      ).rejects.toThrow(PrescriptionDoesNotBelongToDoctorError);
+      await expect(useCase.execute(doctorId, prescriptionId, [itemId])).rejects.toThrow(
+        PrescriptionDoesNotBelongToDoctorError,
+      );
 
       expect(prescriptionRepo.findOneOrFail).toHaveBeenCalledTimes(1);
       expect(prescriptionItemRepo.delete).not.toHaveBeenCalled();
@@ -134,9 +134,9 @@ describe('DeletePrescriptionItemUseCase', () => {
     it('should fail if the prescription has not items', async () => {
       prescriptionRepo.findOneOrFail.mockResolvedValue(useCaseResponse);
 
-      await expect(
-        useCase.execute(doctorId, prescriptionId, [itemId, anotherItemId]),
-      ).rejects.toThrow(PrescriptionItemNotFound);
+      await expect(useCase.execute(doctorId, prescriptionId, [itemId])).rejects.toThrow(
+        PrescriptionItemNotFound,
+      );
 
       expect(prescriptionRepo.findOneOrFail).toHaveBeenCalledTimes(1);
       expect(prescriptionItemRepo.delete).not.toHaveBeenCalled();

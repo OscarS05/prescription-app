@@ -23,7 +23,7 @@ export class DeletePrescriptionItemUseCase {
     prescriptionId: string,
     itemIds: string[],
   ): Promise<void> {
-    const prescription = await this.prescriptionRepo.findOneOrFail(prescriptionId);
+    const prescription = await this.prescriptionRepo.findOneOrFail(prescriptionId, true);
 
     if (prescription.doctorId !== doctorId) {
       throw new PrescriptionDoesNotBelongToDoctorError();
@@ -38,9 +38,8 @@ export class DeletePrescriptionItemUseCase {
     }
 
     const ids = new Set(itemIds);
-    const allItemsBelongToPrescription = prescription.items?.every((item) =>
-      ids.has(item.id),
-    );
+    const allItemsBelongToPrescription = prescription.items?.some((item) => ids.has(item.id));
+
     if (!allItemsBelongToPrescription) {
       throw new PrescriptionItemConflictError();
     }

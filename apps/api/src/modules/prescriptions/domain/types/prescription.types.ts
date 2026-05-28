@@ -1,4 +1,7 @@
-import { QueryParams } from '../../../../shared/domain/types/query-params.types';
+import {
+  QueryFilters,
+  QueryParams,
+} from '../../../../shared/domain/types/query-params.types';
 import { PrescriptionStatus } from '../enums/prescription-status.enum';
 import { PrescriptionItem } from './prescription-items.type';
 
@@ -33,7 +36,5 @@ export type FindAllParams = Omit<QueryParams, 'query'> & {
   patientId?: string | null;
 };
 
-// For repository
-export type PrescriptionQuery = Omit<FindAllParams, 'page'> & {
-  offset: number;
-};
+export type PrescriptionQueryFilters = Omit<FindAllParams, 'page'> &
+  Omit<QueryFilters, 'query'>;

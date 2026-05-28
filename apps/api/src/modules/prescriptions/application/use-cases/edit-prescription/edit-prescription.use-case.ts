@@ -25,7 +25,7 @@ export class EditPrescriptionUseCase {
   ) {}
 
   public async execute(id: string, doctorId: string, changes: Props): Promise<Prescription> {
-    const prescription = await this.prescriptionRepo.findOneOrFail(id);
+    const prescription = await this.prescriptionRepo.findOneOrFail(id, true);
     if (prescription.doctorId !== doctorId) throw new DoctorIdDoesNotBelongError();
     if (!prescription.items && changes?.items?.length) {
       throw new PrescriptionItemConflictError();
@@ -43,6 +43,6 @@ export class EditPrescriptionUseCase {
       await this.prescriptionItemRepo.update(changes.items);
     }
 
-    return await this.prescriptionRepo.findOneOrFail(id);
+    return await this.prescriptionRepo.findOneOrFail(id, true);
   }
 }

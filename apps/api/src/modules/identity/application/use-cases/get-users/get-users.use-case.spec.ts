@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/unbound-method */
 import { GetUsersUseCase } from './get-users.use-case';
 import { UserRepository } from '../../../domain/ports/user.repository';
-import { QueryParams, User } from '../../../domain/types/auth.types';
+import { User, UserQueryParams } from '../../../domain/types/auth.types';
 import { UserRole } from '../../../../../shared/domain/enums/roles.enum';
 
 describe('GetUsersUseCase', () => {
@@ -34,11 +34,12 @@ describe('GetUsersUseCase', () => {
   it('should return a paginated list of users (happy path)', async () => {
     usersRepository.findAll.mockResolvedValue([mockUsers, 10]);
 
-    const query: QueryParams = {
+    const query: UserQueryParams = {
       limit: 10,
       page: 1,
       query: 'test',
-      role: [UserRole.DOCTOR],
+      order: 'DESC',
+      role: UserRole.DOCTOR,
     };
 
     const result = await useCase.execute(query);
@@ -63,11 +64,12 @@ describe('GetUsersUseCase', () => {
   it('should return empty list when no users exist', async () => {
     usersRepository.findAll.mockResolvedValue([[], 0]);
 
-    const query: QueryParams = {
+    const query: UserQueryParams = {
       limit: 10,
       page: 1,
       query: '',
-      role: [],
+      role: UserRole.DOCTOR,
+      order: 'DESC',
     };
 
     const result = await useCase.execute(query);
@@ -76,7 +78,7 @@ describe('GetUsersUseCase', () => {
       limit: 10,
       offset: 0,
       query: '',
-      roles: [],
+      roles: UserRole.DOCTOR,
     });
 
     expect(result).toEqual({
@@ -91,11 +93,12 @@ describe('GetUsersUseCase', () => {
   it('should cap limit to 15', async () => {
     usersRepository.findAll.mockResolvedValue([[], 0]);
 
-    const query: QueryParams = {
+    const query: UserQueryParams = {
       limit: 100,
       page: 1,
       query: '',
-      role: [],
+      role: UserRole.DOCTOR,
+      order: 'DESC',
     };
 
     await useCase.execute(query);
@@ -104,18 +107,19 @@ describe('GetUsersUseCase', () => {
       limit: 15,
       offset: 0,
       query: '',
-      roles: [],
+      roles: UserRole.DOCTOR,
     });
   });
 
   it('should calculate offset correctly', async () => {
     usersRepository.findAll.mockResolvedValue([[], 0]);
 
-    const query: QueryParams = {
+    const query: UserQueryParams = {
       limit: 10,
       page: 3,
       query: '',
-      role: [],
+      role: UserRole.DOCTOR,
+      order: 'DESC',
     };
 
     await useCase.execute(query);
@@ -124,18 +128,19 @@ describe('GetUsersUseCase', () => {
       limit: 10,
       offset: 20,
       query: '',
-      roles: [],
+      roles: UserRole.DOCTOR,
     });
   });
 
   it('should correctly compute hasNextPage when more results exist', async () => {
     usersRepository.findAll.mockResolvedValue([mockUsers, 50]);
 
-    const query: QueryParams = {
+    const query: UserQueryParams = {
       limit: 10,
       page: 1,
       query: '',
-      role: [],
+      role: UserRole.DOCTOR,
+      order: 'DESC',
     };
 
     const result = await useCase.execute(query);

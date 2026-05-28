@@ -3,7 +3,7 @@ import { PrescriptionRepository } from '../../../domain/ports/prescription.repos
 import {
   FindAllParams,
   Prescription,
-  PrescriptionQuery,
+  PrescriptionQueryFilters,
 } from '../../../domain/types/prescription.types';
 import { PayloadToken } from '../../../../identity/domain/types/auth.types';
 import { UserRole } from '../../../../../shared/domain/enums/roles.enum';
@@ -19,7 +19,7 @@ export class FindAllPrescriptionsUseCase {
   ): Promise<SearchResponse<Prescription>> {
     const offset = (data.page - 1) * data.limit;
 
-    const query: PrescriptionQuery = {
+    const query: PrescriptionQueryFilters = {
       ...data,
       offset: offset,
     };

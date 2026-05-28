@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../domain/ports/user.repository';
 import { PrismaService } from '../../../../shared/infrastructure/prisma/prisma.service';
-import { CredentialRegister, QueryRequest, User } from '../../domain/types/auth.types';
+import { CredentialRegister, User, UserQueryFilters } from '../../domain/types/auth.types';
 import { DocumentType, Prisma } from '@prisma/client';
 import { UserMapper } from '../mappers/user.mapper';
 
@@ -11,8 +11,8 @@ export class UserRepositoryPrismaAdapter extends UserRepository {
     super();
   }
 
-  async findAll(query: QueryRequest): Promise<[User[], number]> {
-    const { offset, limit, query: search, roles } = query;
+  async findAll(query: UserQueryFilters): Promise<[User[], number]> {
+    const { offset, limit, query: search, roles, order } = query;
 
     const where = {
       deletedAt: null,
@@ -49,7 +49,7 @@ export class UserRepositoryPrismaAdapter extends UserRepository {
         skip: offset,
         take: limit,
         orderBy: {
-          createdAt: 'desc',
+          createdAt: order === 'DESC' ? 'desc' : 'asc',
         },
       }),
       this.prisma.user.count({
