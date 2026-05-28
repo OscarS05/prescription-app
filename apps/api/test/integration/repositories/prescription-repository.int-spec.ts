@@ -84,6 +84,7 @@ describe('PrismaPrescriptionRepository Integration', () => {
       const prescription = await repository.findOneOrFail(created.id, false);
 
       expect(prescription.id).toBe(created.id);
+      expect(prescription.items).toBeUndefined();
     });
 
     it('should find prescription by code', async () => {
@@ -100,6 +101,24 @@ describe('PrismaPrescriptionRepository Integration', () => {
       const prescription = await repository.findOneOrFail('INT-003', false);
 
       expect(prescription.code).toBe('INT-003');
+      expect(prescription.items).toBeUndefined();
+    });
+
+    it('should find prescription by code', async () => {
+      await prisma.prescription.create({
+        data: {
+          doctorId,
+          patientId,
+          code: 'INT-003',
+          notes: 'find by code',
+          status: PrescriptionStatus.PENDING,
+        },
+      });
+
+      const prescription = await repository.findOneOrFail('INT-003', true);
+
+      expect(prescription.code).toBe('INT-003');
+      expect(prescription.items).toEqual([]);
     });
   });
 

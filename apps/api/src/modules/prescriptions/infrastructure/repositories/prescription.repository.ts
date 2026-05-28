@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { PrescriptionStatus, Prisma } from '@prisma/client';
+import { Prescription as PrescriptionORM } from '@prisma/client';
+
 import { PrismaRepository } from '../../../../shared/infrastructure/prisma/base.repository';
 import { PrescriptionRepository } from '../../domain/ports/prescription.repository';
 import {
@@ -8,7 +11,6 @@ import {
   UpdatePrescription,
 } from '../../domain/types/prescription.types';
 import { PrescriptionMapper } from '../mappers/prescription.mapper';
-import { PrescriptionStatus, Prisma } from '@prisma/client';
 import { PrescriptionNotFound } from '../../domain/errors/prescription.errors';
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { PrismaService } from '../../../../shared/infrastructure/prisma/prisma.service';
@@ -67,10 +69,22 @@ export class PrismaPrescriptionRepository
   }
 
   async findOneOrFail(key: string, includeItems: boolean): Promise<Prescription> {
-    const result = await this.client.prescription.findFirst({
-      where: { deletedAt: null, OR: [{ id: key }, { code: key }] },
-      include: includeItems ? { items: true } : null,
-    });
+    let result: PrescriptionORM | null = null;
+    const where = {
+      deletedAt: null,
+      OR: [{ id: key }, { code: key }],
+    };
+
+    if (includeItems) {
+      result = await this.client.prescription.findFirst({
+        where,
+        include: {
+          items: true,
+        },
+      });
+    } else {
+      result = await this.client.prescription.findFirst({ where });
+    }
 
     if (!result) throw new PrescriptionNotFound();
 
