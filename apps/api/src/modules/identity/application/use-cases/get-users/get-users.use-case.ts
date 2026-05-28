@@ -15,7 +15,8 @@ export class GetUsersUseCase {
       offset,
       limit: normalizedLimit,
       query: query.query,
-      roles: query.role,
+      roles: query.roles,
+      order: 'DESC',
     });
 
     return {

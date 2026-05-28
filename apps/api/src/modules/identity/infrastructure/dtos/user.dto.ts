@@ -2,6 +2,7 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
@@ -39,9 +40,14 @@ export class QueryParam {
   @IsOptional()
   @Transform(({ value }) => Number(value))
   page: number = 1;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['DESC', 'ASC'])
+  order: 'DESC' | 'ASC' = 'DESC';
 }
 
-export class QueryResponse<T> extends OmitType(QueryParam, ['role']) {
+export class QueryResponse<T> extends OmitType(QueryParam, ['role', 'order']) {
   declare limit: number;
   declare page: number;
 

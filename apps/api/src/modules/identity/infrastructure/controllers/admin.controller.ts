@@ -31,11 +31,12 @@ export class AdminController {
   @UseGuards(AccessTokenGuard, RolesGuard)
   @HttpCode(200)
   @Get('users')
-  async getUsers(@Query() query: QueryParam): Promise<QueryResponse<UserInfo>> {
+  async getUsers(@Query() params: QueryParam): Promise<QueryResponse<UserInfo>> {
     try {
       const result = await this.getUsersUseCase.execute({
-        ...query,
-        query: query.query || '',
+        ...params,
+        query: params.query || '',
+        roles: params.role,
       });
 
       return {

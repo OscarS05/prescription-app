@@ -30,7 +30,7 @@ export type UserResponse = {
   tokens: Tokens;
 };
 
-export type UserQueryParams = QueryParams & { role: UserRole };
+export type UserQueryParams = QueryParams & { roles: UserRole[] };
 export type UserQueryFilters = QueryFilters & { roles: UserRole[] };
 
 export type Tokens = {

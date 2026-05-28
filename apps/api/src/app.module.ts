@@ -5,6 +5,7 @@ import { validationSchema } from './shared/infrastructure/env/validate-envs';
 import { AuthModule } from './modules/identity/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerConfigService } from './shared/infrastructure/security/throttler.config';
+import { PrescriptionModule } from './modules/prescriptions/prescription.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ThrottlerConfigService } from './shared/infrastructure/security/throttl
       useClass: ThrottlerConfigService,
     }),
     AuthModule,
+    PrescriptionModule,
   ],
 })
 export class AppModule {}
