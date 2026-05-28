@@ -8,6 +8,7 @@ import {
 export abstract class PrescriptionRepository {
   abstract create(data: CreatePrescription): Promise<Prescription>;
   abstract update(id: string, data: UpdatePrescription): Promise<Prescription>;
+  abstract markAsConsumed(id: string): Promise<void>;
   abstract delete(id: string): Promise<void>;
 
   abstract findTheLastCode(): Promise<string>;

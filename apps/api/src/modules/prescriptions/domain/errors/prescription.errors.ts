@@ -5,6 +5,13 @@ export class PrescriptionNotFound extends Error {
   }
 }
 
+export class OnlyPatientsCanConsumePrescriptions extends Error {
+  constructor(message?: string) {
+    super(message || 'Only patients can mark a prescription as consumed');
+    this.name = 'OnlyPatientsCanConsumePrescriptions';
+  }
+}
+
 export class CannotDeleteConsumedPrescriptionError extends Error {
   constructor(message?: string) {
     super(message || 'A prescription cannot be deleted if its status is "consumed"');
@@ -30,6 +37,20 @@ export class PrescriptionDoesNotBelongToDoctorError extends Error {
   constructor(message?: string) {
     super(message || 'Prescription does not belong to the doctor');
     this.name = 'PrescriptionDoesNotBelongToDoctorError';
+  }
+}
+
+export class PrescriptionDoesNotBelongToPatientError extends Error {
+  constructor(message?: string) {
+    super(message || 'Prescription does not belong to the patient');
+    this.name = 'PrescriptionDoesNotBelongToPatientError';
+  }
+}
+
+export class PrescriptionHasAlreadyConsumed extends Error {
+  constructor(message?: string) {
+    super(message || 'Prescription has already consumed');
+    this.name = 'PrescriptionHasAlreadyConsumed';
   }
 }
 
