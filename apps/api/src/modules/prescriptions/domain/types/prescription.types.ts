@@ -13,7 +13,7 @@ export type Prescription = {
   status: PrescriptionStatus;
   notes: string | null;
   createdAt: Date;
-  consumedAt: Date;
+  consumedAt: Date | null;
   updatedAt: Date;
   deletedAt?: Date | null;
 

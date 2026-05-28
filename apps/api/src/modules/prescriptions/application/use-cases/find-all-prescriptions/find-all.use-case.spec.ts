@@ -78,7 +78,7 @@ describe('FindAllPrescriptionsUseCase', () => {
       });
 
       expect(prescriptionRepo.findAll).toHaveBeenCalledTimes(1);
-      expect(prescriptionRepo.findAll).toHaveBeenCalledWith(doctorId, {
+      expect(prescriptionRepo.findAll).toHaveBeenCalledWith('doctor', doctorId, {
         ...filters,
         offset: 0,
         patientId,
@@ -100,7 +100,7 @@ describe('FindAllPrescriptionsUseCase', () => {
       });
 
       expect(prescriptionRepo.findAll).toHaveBeenCalledTimes(1);
-      expect(prescriptionRepo.findAll).toHaveBeenCalledWith(patientId, {
+      expect(prescriptionRepo.findAll).toHaveBeenCalledWith('patient', patientId, {
         ...filters,
         doctorId,
         offset: 0,

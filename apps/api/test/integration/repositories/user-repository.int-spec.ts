@@ -1,6 +1,5 @@
-// user-repository-prisma.adapter.int.spec.ts
-
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { PrismaService } from '../../../src/shared/infrastructure/prisma/prisma.service';
 import { UserRepositoryPrismaAdapter } from '../../../src/modules/identity/infrastructure/db/user.repository';
 import { UserRole } from '../../../src/shared/domain/enums/roles.enum';

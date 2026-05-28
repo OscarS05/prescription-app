@@ -1,6 +1,7 @@
+import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import {
   CreatePrescription,
-  PrescriptionQuery,
+  PrescriptionQueryFilters,
   Prescription,
   UpdatePrescription,
 } from '../types/prescription.types';
@@ -13,8 +14,9 @@ export abstract class PrescriptionRepository {
 
   abstract findTheLastCode(): Promise<string>;
   abstract findAll(
+    typeUser: UserRole,
     profileId: string,
-    filters: PrescriptionQuery,
+    filters: PrescriptionQueryFilters,
   ): Promise<[Prescription[], number]>;
   abstract findOneOrFail(key: string, includeItems: boolean): Promise<Prescription>;
 }
