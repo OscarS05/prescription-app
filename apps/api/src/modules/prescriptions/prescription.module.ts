@@ -14,15 +14,15 @@ import { FindAllPrescriptionsUseCase } from './application/use-cases/find-all-pr
 import { FindOnePrescriptionUseCase } from './application/use-cases/find-one/find-one.use-case';
 import { UnitOfWorkService } from '../../shared/domain/ports/unit-of-work.service';
 import { PrismaUnitOfWork } from '../../shared/infrastructure/prisma/unit-of-work.adapter';
+import { PrescriptionController } from './infrastructure/controllers/prescription.controller';
 
 @Module({
   imports: [PrismaModule],
-  // controllers: [PrescriptionController],
+  controllers: [PrescriptionController],
   providers: [
     { provide: UnitOfWorkService, useClass: PrismaUnitOfWork },
     { provide: PrescriptionRepository, useClass: PrismaPrescriptionRepository },
     { provide: PrescriptionItemRepository, useClass: PrismaPrescriptionItemRepository },
-    // { provide: APP_GUARD, useClass: AccessTokenGuard },
     CreatePrescriptionUseCase,
     ConsumePrescriptionUseCase,
     DeletePrescriptionUseCase,

@@ -3,13 +3,14 @@ import { GetUsersUseCase } from '../../application/use-cases/get-users/get-users
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RegisterDto, UserResponseDto } from '../dtos/auth.dto';
 import { ErrorMapper } from '../mappers/error.mapper';
-import { QueryParam, QueryResponse } from '../dtos/user.dto';
+import { UserQueryParam } from '../dtos/user.dto';
 import { UserInfo } from '../../domain/types/auth.types';
 import { AccessTokenGuard } from '../../../../shared/infrastructure/guards/accessToken.guard';
 import { RolesGuard } from '../../../../shared/infrastructure/guards/roles.guard';
 import { Roles } from '../../../../shared/infrastructure/decorators/roles.decorator';
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { CreateUserUseCase } from '../../application/use-cases/create-user/create-user.use-case';
+import { QueryResponse } from '../../../../shared/infrastructure/dto/filters.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -31,7 +32,7 @@ export class AdminController {
   @UseGuards(AccessTokenGuard, RolesGuard)
   @HttpCode(200)
   @Get('users')
-  async getUsers(@Query() params: QueryParam): Promise<QueryResponse<UserInfo>> {
+  async getUsers(@Query() params: UserQueryParam): Promise<QueryResponse<UserInfo>> {
     try {
       const result = await this.getUsersUseCase.execute({
         ...params,

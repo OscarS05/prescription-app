@@ -1,18 +1,9 @@
-import {
-  IsArray,
-  IsBoolean,
-  IsEnum,
-  IsIn,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Length,
-} from 'class-validator';
+import { IsArray, IsEnum, IsOptional } from 'class-validator';
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { Transform } from 'class-transformer';
-import { OmitType } from '@nestjs/swagger';
+import { QueryParam } from '../../../../shared/infrastructure/dto/filters.dto';
 
-export class QueryParam {
+export class UserQueryParam extends QueryParam {
   @IsOptional()
   @Transform(({ value }: { value: unknown }) => {
     if (!value) return [];
@@ -25,38 +16,4 @@ export class QueryParam {
   @IsArray()
   @IsEnum(UserRole, { each: true })
   role!: UserRole[];
-
-  @Length(1, 50)
-  @IsString()
-  @IsOptional()
-  query?: string;
-
-  @IsNumber()
-  @IsOptional()
-  @Transform(({ value }) => Number(value))
-  limit: number = 25;
-
-  @IsNumber()
-  @IsOptional()
-  @Transform(({ value }) => Number(value))
-  page: number = 1;
-
-  @IsOptional()
-  @IsString()
-  @IsIn(['DESC', 'ASC'])
-  order: 'DESC' | 'ASC' = 'DESC';
-}
-
-export class QueryResponse<T> extends OmitType(QueryParam, ['role', 'order']) {
-  declare limit: number;
-  declare page: number;
-
-  @IsNumber()
-  total!: number;
-
-  @IsBoolean()
-  hasNextPage!: boolean;
-
-  @IsArray()
-  data!: T[];
 }

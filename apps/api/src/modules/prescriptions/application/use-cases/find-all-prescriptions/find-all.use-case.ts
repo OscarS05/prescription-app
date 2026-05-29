@@ -33,7 +33,7 @@ export class FindAllPrescriptionsUseCase {
     }
 
     const [prescriptions, total] = await this.prescriptionRepository.findAll(
-      payload.role === UserRole.DOCTOR ? UserRole.DOCTOR : UserRole.PATIENT,
+      payload.role,
       payload.sub,
       query,
     );
