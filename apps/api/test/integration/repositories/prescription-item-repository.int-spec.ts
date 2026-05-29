@@ -32,6 +32,8 @@ describe('PrismaPrescriptionItemRepository Integration', () => {
   });
 
   afterAll(async () => {
+    await prisma.prescription.deleteMany();
+    await prisma.prescriptionItem.deleteMany();
     await prisma.$disconnect();
   });
 

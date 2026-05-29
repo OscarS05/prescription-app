@@ -11,6 +11,7 @@ import { patientEmailSeed, patientPassSeed } from '../../../prisma/seeders/patie
 import { PrescriptionResponseDto } from '../../../src/modules/prescriptions/infrastructure/dtos/prescription.dto';
 import { PrescriptionStatus } from '../../../src/modules/prescriptions/domain/enums/prescription-status.enum';
 import { QueryResponse } from '../../../src/shared/infrastructure/dto/filters.dto';
+import { clearDB } from '../helpers/clearDB.helper';
 
 describe('PrescriptionController (e2e)', () => {
   let app: INestApplication;
@@ -43,11 +44,7 @@ describe('PrescriptionController (e2e)', () => {
 
     await prismaService.$connect();
 
-    await prismaService.prescriptionItem.deleteMany();
-    await prismaService.prescription.deleteMany();
-    await prismaService.doctor.deleteMany();
-    await prismaService.patient.deleteMany();
-    await prismaService.user.deleteMany();
+    await clearDB(prismaService);
 
     await runSeeds();
 
@@ -75,6 +72,7 @@ describe('PrescriptionController (e2e)', () => {
   });
 
   afterAll(async () => {
+    await clearDB(prismaService);
     await prismaService.$disconnect();
     await app.close();
   });
