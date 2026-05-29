@@ -9,9 +9,9 @@ import { PrismaService } from '../../../src/shared/infrastructure/prisma/prisma.
 import { adminEmailSeed, adminPassSeed } from '../../../prisma/seeders/admin.seed';
 import { getTokensFromCookies } from '../helpers/cookie.helper';
 import { runSeeds } from '../../../prisma/main.seed';
-import { QueryResponse } from '../../../src/modules/identity/infrastructure/dtos/user.dto';
 import { UserInfo } from '../../../src/modules/identity/domain/types/auth.types';
 import { UserResponseDto } from '../../../src/modules/identity/infrastructure/dtos/auth.dto';
+import { QueryResponse } from '../../../src/shared/infrastructure/dto/filters.dto';
 
 describe('AdminController (e2e)', () => {
   let app: INestApplication;
