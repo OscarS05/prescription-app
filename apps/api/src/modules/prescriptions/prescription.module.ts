@@ -15,10 +15,11 @@ import { FindOnePrescriptionUseCase } from './application/use-cases/find-one/fin
 import { UnitOfWorkService } from '../../shared/domain/ports/unit-of-work.service';
 import { PrismaUnitOfWork } from '../../shared/infrastructure/prisma/unit-of-work.adapter';
 import { PrescriptionController } from './infrastructure/controllers/prescription.controller';
+import { PrescriptionItemController } from './infrastructure/controllers/prescription-item.controller';
 
 @Module({
   imports: [PrismaModule],
-  controllers: [PrescriptionController],
+  controllers: [PrescriptionController, PrescriptionItemController],
   providers: [
     { provide: UnitOfWorkService, useClass: PrismaUnitOfWork },
     { provide: PrescriptionRepository, useClass: PrismaPrescriptionRepository },

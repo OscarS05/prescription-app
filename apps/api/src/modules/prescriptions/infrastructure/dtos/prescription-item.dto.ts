@@ -1,4 +1,13 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Length } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Length,
+} from 'class-validator';
 import { PrescriptionItem } from '../../domain/types/prescription-items.type';
 import { OmitType } from '@nestjs/swagger';
 
@@ -43,6 +52,13 @@ export class PresciptionItemResponseDto extends PrescriptionItemDto {
     dto.instructions = data.instructions;
     return dto;
   }
+}
+
+export class DeletePrescriptionItemsDto {
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsUUID('4', { each: true })
+  ids!: string[];
 }
 
 export class CreatePrescriptionItemDto extends OmitType(PrescriptionItemDto, [
