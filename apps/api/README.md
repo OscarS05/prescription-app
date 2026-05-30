@@ -323,7 +323,6 @@ GET /me/profile
 ```txt
 POST /admin/users
 GET  /admin/users
-GET  /admin/prescriptions
 GET  /admin/metrics
 ```
 
