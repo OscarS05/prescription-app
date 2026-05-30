@@ -19,6 +19,15 @@ export class CannotDeleteConsumedPrescriptionError extends Error {
   }
 }
 
+export class CannotCreateItemInAConsumedPrescriptionError extends Error {
+  constructor(message?: string) {
+    super(
+      message || 'Items cannot be created if the prescription is in the "consumed" state',
+    );
+    this.name = 'CannotDeleteConsumedPrescriptionError';
+  }
+}
+
 export class PrescriptionCodeError extends Error {
   constructor(message?: string) {
     super(message || 'Prescription code is already in use');

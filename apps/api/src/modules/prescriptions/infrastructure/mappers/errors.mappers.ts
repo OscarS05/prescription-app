@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  CannotCreateItemInAConsumedPrescriptionError,
   CannotDeleteConsumedPrescriptionError,
   DoctorIdDoesNotBelongError,
   DomainInternalError,
@@ -59,6 +60,10 @@ export class ErrorMapper {
     }
 
     if (error instanceof CannotDeleteConsumedPrescriptionError) {
+      throw new BadRequestException(error.message);
+    }
+
+    if (error instanceof CannotCreateItemInAConsumedPrescriptionError) {
       throw new BadRequestException(error.message);
     }
 
