@@ -16,6 +16,7 @@ import { UnitOfWorkService } from '../../shared/domain/ports/unit-of-work.servic
 import { PrismaUnitOfWork } from '../../shared/infrastructure/prisma/unit-of-work.adapter';
 import { PrescriptionController } from './infrastructure/controllers/prescription.controller';
 import { PrescriptionItemController } from './infrastructure/controllers/prescription-item.controller';
+import { CreatePrescriptionItemUseCase } from './application/use-cases/create-prescription-item/create-item.use-case';
 
 @Module({
   imports: [PrismaModule],
@@ -25,6 +26,7 @@ import { PrescriptionItemController } from './infrastructure/controllers/prescri
     { provide: PrescriptionRepository, useClass: PrismaPrescriptionRepository },
     { provide: PrescriptionItemRepository, useClass: PrismaPrescriptionItemRepository },
     CreatePrescriptionUseCase,
+    CreatePrescriptionItemUseCase,
     ConsumePrescriptionUseCase,
     DeletePrescriptionUseCase,
     DeletePrescriptionItemUseCase,

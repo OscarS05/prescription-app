@@ -9,6 +9,7 @@ import { getTokensFromCookies } from '../helpers/cookie.helper';
 import { doctorEmailSeed, doctorPassSeed } from '../../../prisma/seeders/doctor.seed';
 import { patientEmailSeed, patientPassSeed } from '../../../prisma/seeders/patient.seed';
 import { clearDB } from '../helpers/clearDB.helper';
+import { PrescriptionItemResponseDto } from '../../../src/modules/prescriptions/infrastructure/dtos/prescription-item.dto';
 
 describe('PrescriptionController (e2e)', () => {
   let app: INestApplication;
@@ -52,27 +53,32 @@ describe('PrescriptionController (e2e)', () => {
     await app.close();
   });
 
-  // describe('POST /prescriptions', () => {
-  //   it('should create a prescription', async () => {
-  //     const response = await request(server)
-  //       .post('/prescriptions')
-  //       .set('Cookie', `accessToken=${accessTokenDoctor}`)
-  //       .send({
-  //         doctorId,
-  //         patientId,
-  //         notes: 'Take after lunch',
-  //         items: [{ name: 'item1' }, { name: 'item2' }],
-  //       })
-  //       .expect(201);
+  describe('POST /prescriptions/:id/items', () => {
+    it('should create a prescription item', async () => {
+      const prescription = await prismaService.prescription.findFirst();
 
-  //     const body = response.body as PrescriptionResponseDto;
+      const response = await request(server)
+        .post(`/prescriptions/${prescription?.id}/items`)
+        .set('Cookie', `accessToken=${accessTokenDoctor}`)
+        .send({ name: 'item1' })
+        .expect(201);
 
-  //     expect(body.id).toBeDefined();
-  //     expect(body.code).toBeDefined();
-  //     expect(body.notes).toBeDefined();
-  //     expect(body.items.length).toBe(2);
-  //   });
-  // });
+      const body = response.body as PrescriptionItemResponseDto;
+
+      expect(body.id).toBeDefined();
+      expect(body.prescriptionId).toBe(prescription?.id);
+    });
+
+    it('should deny patients', async () => {
+      const prescription = await prismaService.prescription.findFirst();
+
+      await request(server)
+        .post(`/prescriptions/${prescription?.id}/items`)
+        .set('Cookie', `accessToken=${accessTokenPatient}`)
+        .send({ name: 'item1' })
+        .expect(403);
+    });
+  });
 
   describe('DELETE /prescriptions/:id/items/', () => {
     it('should delete a prescription item', async () => {

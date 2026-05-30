@@ -41,9 +41,9 @@ export class PrescriptionItemDto {
   instructions: string | null = null;
 }
 
-export class PresciptionItemResponseDto extends PrescriptionItemDto {
-  static fromDomain(data: PrescriptionItem): PresciptionItemResponseDto {
-    const dto = new PresciptionItemResponseDto();
+export class PrescriptionItemResponseDto extends PrescriptionItemDto {
+  static fromDomain(data: PrescriptionItem): PrescriptionItemResponseDto {
+    const dto = new PrescriptionItemResponseDto();
     dto.id = data.id;
     dto.prescriptionId = data.prescriptionId;
     dto.name = data.name;

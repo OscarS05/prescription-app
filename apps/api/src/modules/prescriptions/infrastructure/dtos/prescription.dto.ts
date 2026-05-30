@@ -14,7 +14,7 @@ import { PrescriptionStatus } from '../../domain/enums/prescription-status.enum'
 import {
   CreatePrescriptionItemDto,
   EditPrescriptionItemDto,
-  PresciptionItemResponseDto,
+  PrescriptionItemResponseDto,
   PrescriptionItemDto,
 } from './prescription-item.dto';
 import { Prescription } from '../../domain/types/prescription.types';
@@ -74,7 +74,7 @@ export class PrescriptionResponseDto extends PrescriptionDto {
     dto.consumedAt = data.consumedAt;
     dto.createdAt = data.createdAt;
     dto.updatedAt = data.updatedAt;
-    dto.items = data.items?.map((item) => PresciptionItemResponseDto.fromDomain(item)) || [];
+    dto.items = data.items?.map((item) => PrescriptionItemResponseDto.fromDomain(item)) || [];
     return dto;
   }
 }
