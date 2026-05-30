@@ -316,7 +316,6 @@ DELETE /auth/session
 
 ```txt
 GET /me/profile
-GET /me/prescriptions
 ```
 
 ## Admin
