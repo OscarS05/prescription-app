@@ -77,15 +77,16 @@ describe('PrescriptionController (e2e)', () => {
     await app.close();
   });
 
-  describe('POST /prescription', () => {
+  describe('POST /prescriptions', () => {
     it('should create a prescription', async () => {
       const response = await request(server)
-        .post('/prescription')
+        .post('/prescriptions')
         .set('Cookie', `accessToken=${accessTokenDoctor}`)
         .send({
           doctorId,
           patientId,
           notes: 'Take after lunch',
+          items: [{ name: 'item1' }, { name: 'item2' }],
         })
         .expect(201);
 
@@ -94,15 +95,16 @@ describe('PrescriptionController (e2e)', () => {
       expect(body.id).toBeDefined();
       expect(body.code).toBeDefined();
       expect(body.notes).toBeDefined();
+      expect(body.items.length).toBe(2);
     });
   });
 
-  describe('GET /prescription/:id', () => {
+  describe('GET /prescriptions/:id', () => {
     it('should find a prescription', async () => {
       const prescription = await createPrescription();
 
       const response = await request(server)
-        .get(`/prescription/${prescription.id}`)
+        .get(`/prescriptions/${prescription.id}`)
         .set('Cookie', `accessToken=${accessTokenDoctor}`)
         .expect(200);
 
@@ -113,16 +115,16 @@ describe('PrescriptionController (e2e)', () => {
 
     it('should return 404 when prescription does not exist', async () => {
       await request(server)
-        .get(`/prescription/${crypto.randomUUID()}`)
+        .get(`/prescriptions/${crypto.randomUUID()}`)
         .set('Cookie', `accessToken=${accessTokenDoctor}`)
         .expect(404);
     });
   });
 
-  describe('GET /prescription', () => {
+  describe('GET /prescriptions', () => {
     it('should return prescriptions', async () => {
       const response = await request(server)
-        .get('/prescription')
+        .get('/prescriptions')
         .set('Cookie', `accessToken=${accessTokenDoctor}`)
         .expect(200);
 
@@ -135,7 +137,7 @@ describe('PrescriptionController (e2e)', () => {
 
     it('should paginate results', async () => {
       const response = await request(server)
-        .get('/prescription?page=1&limit=5')
+        .get('/prescriptions?page=1&limit=5')
         .set('Cookie', `accessToken=${accessTokenDoctor}`)
         .expect(200);
 
@@ -149,7 +151,7 @@ describe('PrescriptionController (e2e)', () => {
 
     it('should filter by status', async () => {
       const response = await request(server)
-        .get('/prescription')
+        .get('/prescriptions')
         .query({
           status: PrescriptionStatus.PENDING,
         })
@@ -162,28 +164,38 @@ describe('PrescriptionController (e2e)', () => {
     });
   });
 
-  describe('PATCH /prescription/:id', () => {
+  describe('PATCH /prescriptions/:id', () => {
     it('should update notes', async () => {
-      const prescription = await createPrescription();
+      const prescription = await prismaService.prescription.findFirst({
+        include: { items: true },
+      });
 
       const response = await request(server)
-        .patch(`/prescription/${prescription.id}`)
+        .patch(`/prescriptions/${prescription?.id}`)
         .set('Cookie', `accessToken=${accessTokenDoctor}`)
         .send({
           notes: 'Updated notes',
+          items: [
+            {
+              id: prescription?.items[0].id,
+              name: 'newNote',
+            },
+          ],
         })
         .expect(200);
 
       const body = response.body as PrescriptionResponseDto;
 
       expect(body.notes).toBe('Updated notes');
+      const itemUpdated = body.items.find((item) => item.id === prescription?.items[0].id);
+      expect(itemUpdated?.name).toBe('newNote');
     });
 
     it('should deny patient access', async () => {
       const prescription = await createPrescription();
 
       await request(server)
-        .patch(`/prescription/${prescription.id}`)
+        .patch(`/prescriptions/${prescription.id}`)
         .set('Cookie', `accessToken=${accessTokenPatient}`)
         .send({
           notes: 'Updated notes',
@@ -195,7 +207,7 @@ describe('PrescriptionController (e2e)', () => {
       const prescription = await createPrescription();
 
       await request(server)
-        .patch(`/prescription/${prescription.id}`)
+        .patch(`/prescriptions/${prescription.id}`)
         .send({
           notes: 'Updated notes',
         })
@@ -203,12 +215,12 @@ describe('PrescriptionController (e2e)', () => {
     });
   });
 
-  describe('PATCH /prescription/:id/status', () => {
+  describe('PATCH /prescriptions/:id/status', () => {
     it('should consume prescription', async () => {
       const prescription = await createPrescription();
 
       await request(server)
-        .patch(`/prescription/${prescription.id}/status`)
+        .patch(`/prescriptions/${prescription.id}/status`)
         .set('Cookie', `accessToken=${accessTokenPatient}`)
         .expect(204);
     });
@@ -217,18 +229,18 @@ describe('PrescriptionController (e2e)', () => {
       const prescription = await createPrescription();
 
       await request(server)
-        .patch(`/prescription/${prescription.id}/status`)
+        .patch(`/prescriptions/${prescription.id}/status`)
         .set('Cookie', `accessToken=${accessTokenDoctor}`)
         .expect(403);
     });
   });
 
-  describe('DELETE /prescription/:id', () => {
+  describe('DELETE /prescriptions/:id', () => {
     it('should delete a prescription', async () => {
       const prescription = await createPrescription();
 
       await request(server)
-        .delete(`/prescription/${prescription.id}`)
+        .delete(`/prescriptions/${prescription.id}`)
         .set('Cookie', `accessToken=${accessTokenDoctor}`)
         .expect(204);
 
@@ -245,7 +257,7 @@ describe('PrescriptionController (e2e)', () => {
       const prescription = await createPrescription();
 
       await request(server)
-        .delete(`/prescription/${prescription.id}`)
+        .delete(`/prescriptions/${prescription.id}`)
         .set('Cookie', `accessToken=${accessTokenPatient}`)
         .expect(403);
     });

@@ -8,8 +8,11 @@ import {
   DomainInternalError,
   PrescriptionCodeError,
 } from '../../../domain/errors/prescription.errors';
+import { CreatePrescriptionItem } from '../../../domain/types/prescription-items.type';
 
-export type Props = Pick<Prescription, 'doctorId' | 'patientId' | 'notes' | 'items'>;
+export type Props = Pick<Prescription, 'doctorId' | 'patientId' | 'notes'> & {
+  items: Omit<CreatePrescriptionItem, 'prescriptionId'>[];
+};
 
 @Injectable()
 export class CreatePrescriptionUseCase {
@@ -19,16 +22,23 @@ export class CreatePrescriptionUseCase {
   ) {}
 
   public async execute(data: Props): Promise<Prescription> {
+    const { items, ...prescription } = data;
+
     for (let attempt = 1; attempt <= 5; attempt++) {
       try {
         const newPrescription = await this.prescriptionRepo.create({
-          ...data,
+          ...prescription,
           code: await this.buildCode(),
           status: PrescriptionStatus.PENDING,
         });
 
-        if (data?.items?.length) {
-          const newItems = await this.prescriptionItemRepo.create(data.items);
+        if (items?.length) {
+          const newItems = await this.prescriptionItemRepo.create(
+            items.map((item) => ({
+              ...item,
+              prescriptionId: newPrescription.id,
+            })),
+          );
           newPrescription.items = newItems;
         }
 

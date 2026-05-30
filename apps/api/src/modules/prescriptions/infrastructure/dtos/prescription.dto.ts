@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsDate,
   IsEnum,
   IsNotEmpty,
@@ -7,11 +8,17 @@ import {
   IsString,
   IsUUID,
   Length,
+  ValidateNested,
 } from 'class-validator';
 import { PrescriptionStatus } from '../../domain/enums/prescription-status.enum';
-import { PresciptionItemResponseDto, PrescriptionItemDto } from './prescription-item.dto';
+import {
+  CreatePrescriptionItemDto,
+  EditPrescriptionItemDto,
+  PresciptionItemResponseDto,
+  PrescriptionItemDto,
+} from './prescription-item.dto';
 import { Prescription } from '../../domain/types/prescription.types';
-import { OmitType, PartialType, PickType } from '@nestjs/swagger';
+import { OmitType, PickType } from '@nestjs/swagger';
 import { QueryParam } from '../../../../shared/infrastructure/dto/filters.dto';
 
 export class PrescriptionDto {
@@ -76,12 +83,19 @@ export class CreatePrescriptionDto extends PickType(PrescriptionDto, [
   'patientId',
   'doctorId',
   'notes',
-  'items',
-]) {}
+]) {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreatePrescriptionItemDto)
+  items!: CreatePrescriptionItemDto[];
+}
 
-export class EditPrescriptionDto extends PartialType(
-  PickType(PrescriptionDto, ['notes', 'items']),
-) {}
+export class EditPrescriptionDto extends PickType(PrescriptionDto, ['notes']) {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => EditPrescriptionItemDto)
+  items!: EditPrescriptionItemDto[];
+}
 
 export class PrescriptionQueryParams extends OmitType(QueryParam, ['query']) {
   @IsOptional()

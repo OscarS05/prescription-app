@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Length } from 'class-validator';
 import { PrescriptionItem } from '../../domain/types/prescription-items.type';
+import { OmitType } from '@nestjs/swagger';
 
 export class PrescriptionItemDto {
   @IsUUID()
@@ -43,3 +44,12 @@ export class PresciptionItemResponseDto extends PrescriptionItemDto {
     return dto;
   }
 }
+
+export class CreatePrescriptionItemDto extends OmitType(PrescriptionItemDto, [
+  'id',
+  'prescriptionId',
+]) {}
+
+export class EditPrescriptionItemDto extends OmitType(PrescriptionItemDto, [
+  'prescriptionId',
+]) {}

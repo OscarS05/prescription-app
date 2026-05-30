@@ -29,8 +29,9 @@ import { ConsumePrescriptionUseCase } from '../../application/use-cases/consume-
 import { DeletePrescriptionUseCase } from '../../application/use-cases/delete-prescription/delete-prescription.use-case';
 import { FindAllPrescriptionsUseCase } from '../../application/use-cases/find-all-prescriptions/find-all.use-case';
 import { QueryResponse } from '../../../../shared/infrastructure/dto/filters.dto';
+import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 
-@Controller('prescription')
+@Controller('prescriptions')
 export class PrescriptionController {
   constructor(
     private readonly findAllPrescriptionsUseCase: FindAllPrescriptionsUseCase,
@@ -50,6 +51,8 @@ export class PrescriptionController {
     description: 'Prescription data',
     type: PrescriptionResponseDto,
   })
+  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT)
+  @UseGuards(RolesGuard)
   @HttpCode(200)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<PrescriptionResponseDto> {
@@ -70,6 +73,8 @@ export class PrescriptionController {
     description: 'List of prescriptions',
     type: QueryResponse<PrescriptionResponseDto>,
   })
+  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT)
+  @UseGuards(RolesGuard)
   @HttpCode(200)
   @Get()
   async findAll(
@@ -96,6 +101,8 @@ export class PrescriptionController {
     description: 'The prescription created',
     type: PrescriptionResponseDto,
   })
+  @Roles(UserRole.DOCTOR)
+  @UseGuards(RolesGuard)
   @HttpCode(201)
   @Post()
   async create(@Body() body: CreatePrescriptionDto): Promise<PrescriptionResponseDto> {
@@ -116,7 +123,7 @@ export class PrescriptionController {
     description: 'The prescription updated',
     type: PrescriptionResponseDto,
   })
-  @Roles('doctor')
+  @Roles(UserRole.DOCTOR)
   @UseGuards(RolesGuard)
   @Patch(':id')
   async update(
@@ -128,6 +135,7 @@ export class PrescriptionController {
       const result = await this.editPrescriptionUseCase.execute(id, user.sub, body);
       return PrescriptionResponseDto.fromDomain(result);
     } catch (error) {
+      console.log('error:', error);
       ErrorMapper.toHttp(error as Error);
     }
   }
@@ -139,7 +147,7 @@ export class PrescriptionController {
   @ApiResponse({
     status: 204,
   })
-  @Roles('patient')
+  @Roles(UserRole.PATIENT)
   @UseGuards(RolesGuard)
   @HttpCode(204)
   @Patch(':id/status/')
@@ -157,7 +165,7 @@ export class PrescriptionController {
   @ApiResponse({
     status: 204,
   })
-  @Roles('doctor')
+  @Roles(UserRole.DOCTOR)
   @UseGuards(RolesGuard)
   @HttpCode(204)
   @Delete(':id')
