@@ -1,5 +1,9 @@
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import {
+  AdminMetricsRequest,
+  PrescriptionMetrics,
+} from '../../../identity/domain/types/admin.types';
+import {
   CreatePrescription,
   PrescriptionQueryFilters,
   Prescription,
@@ -19,4 +23,5 @@ export abstract class PrescriptionRepository {
     filters: PrescriptionQueryFilters,
   ): Promise<[Prescription[], number]>;
   abstract findOneOrFail(key: string, includeItems: boolean): Promise<Prescription>;
+  abstract getMetrics(filters: AdminMetricsRequest): Promise<PrescriptionMetrics>;
 }

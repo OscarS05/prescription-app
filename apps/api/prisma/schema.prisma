@@ -31,7 +31,7 @@ model User {
   email            String        @db.VarChar(254)
   password         String        @db.VarChar(255)
   role             UserRole
-  refreshTokenHash String? @map("refresh_token_hash") @db.VarChar(255)
+  refreshTokenHash String?       @map("refresh_token_hash") @db.VarChar(255)
   createdAt        DateTime      @default(now()) @map("created_at")
   updatedAt        DateTime      @updatedAt @map("updated_at")
   deletedAt        DateTime?     @map("deleted_at")
