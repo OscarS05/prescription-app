@@ -2,7 +2,7 @@ export type AdminMetricsResponse = Omit<
   PrescriptionMetrics,
   'totalPrescriptions' | 'prescriptionsInPeriod'
 > & {
-  period: AdminMetricsRequest;
+  period: { from: string; to: string };
 
   totals: TotalUserMetrics & TotalPrescriptionMetrics;
 };

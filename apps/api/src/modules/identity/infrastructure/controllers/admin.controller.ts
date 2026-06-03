@@ -1,9 +1,13 @@
 import { Body, Controller, Get, HttpCode, Post, Query, UseGuards } from '@nestjs/common';
 import { GetUsersUseCase } from '../../application/use-cases/get-users/get-users.use-case';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { RegisterDto, UserResponseDto } from '../dtos/auth.dto';
 import { ErrorMapper } from '../mappers/error.mapper';
-import { UserQueryParam } from '../dtos/user.dto';
+import {
+  AdminMetricsResponseDto,
+  UserQueryParam,
+  UserQueryParamForMetrics,
+} from '../dtos/user.dto';
 import { UserInfo } from '../../domain/types/auth.types';
 import { AccessTokenGuard } from '../../../../shared/infrastructure/guards/accessToken.guard';
 import { RolesGuard } from '../../../../shared/infrastructure/guards/roles.guard';
@@ -11,11 +15,13 @@ import { Roles } from '../../../../shared/infrastructure/decorators/roles.decora
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { CreateUserUseCase } from '../../application/use-cases/create-user/create-user.use-case';
 import { QueryResponse } from '../../../../shared/infrastructure/dto/filters.dto';
+import { GetAdminMetricsUseCase } from '../../application/use-cases/get-admin-metrics/get-admin-metrics.use-case';
 
 @Controller('admin')
 export class AdminController {
   constructor(
     private readonly getUsersUseCase: GetUsersUseCase,
+    private readonly getAdminMetricsUseCase: GetAdminMetricsUseCase,
     private readonly createUserUseCase: CreateUserUseCase,
   ) {}
 
@@ -44,6 +50,30 @@ export class AdminController {
         ...result,
         data: result.data.map((u) => UserResponseDto.fromDomain(u)),
       };
+    } catch (error) {
+      throw ErrorMapper.toHttp(error);
+    }
+  }
+
+  @ApiOperation({
+    summary: 'Get Metrics',
+    description: 'Retrieve metrics for all users and prescriptions',
+  })
+  @ApiQuery({ type: UserQueryParamForMetrics })
+  @ApiResponse({
+    status: 200,
+    description: 'Metrics for all users and prescriptions',
+    type: AdminMetricsResponseDto,
+  })
+  @Roles(UserRole.ADMIN)
+  @UseGuards(RolesGuard)
+  @HttpCode(200)
+  @Get('metrics')
+  async getMetrics(
+    @Query() params: UserQueryParamForMetrics,
+  ): Promise<AdminMetricsResponseDto> {
+    try {
+      return await this.getAdminMetricsUseCase.execute(params);
     } catch (error) {
       throw ErrorMapper.toHttp(error);
     }

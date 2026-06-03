@@ -24,11 +24,15 @@ import { SessionManagerService } from './application/services/session-manager/se
 import { AdminController } from './infrastructure/controllers/admin.controller';
 import { GetUsersUseCase } from './application/use-cases/get-users/get-users.use-case';
 import { MeController } from './infrastructure/controllers/me.controller';
+import { GetAdminMetricsUseCase } from './application/use-cases/get-admin-metrics/get-admin-metrics.use-case';
+import { PrismaPrescriptionRepository } from '../prescriptions/infrastructure/repositories/prescription.repository';
+import { PrescriptionRepository } from '../prescriptions/domain/ports/prescription.repository';
 
 @Module({
   imports: [PrismaModule, JwtModule.register({})],
   controllers: [AuthController, AdminController, MeController],
   providers: [
+    { provide: PrescriptionRepository, useClass: PrismaPrescriptionRepository },
     { provide: UserRepository, useClass: UserRepositoryPrismaAdapter },
     { provide: DoctorRepository, useClass: DoctorRepositoryPrismaAdapter },
     { provide: PatientRepository, useClass: PatientRepositoryPrismaAdapter },
@@ -42,6 +46,7 @@ import { MeController } from './infrastructure/controllers/me.controller';
     CreateUserUseCase,
     SessionManagerService,
     GetUsersUseCase,
+    GetAdminMetricsUseCase,
   ],
 })
 export class AuthModule {}

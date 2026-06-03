@@ -1,7 +1,15 @@
-import { IsArray, IsEnum, IsOptional } from 'class-validator';
+import { IsArray, IsDate, IsEnum, IsOptional } from 'class-validator';
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { QueryParam } from '../../../../shared/infrastructure/dto/filters.dto';
+import {
+  AdminMetricsRequest,
+  TopDoctorMetrics,
+  TotalPrescriptionByStatus,
+  TotalPrescriptionMetrics,
+  TotalPrescriptionsPerDay,
+  TotalUserMetrics,
+} from '../../domain/types/admin.types';
 
 export class UserQueryParam extends QueryParam {
   @IsOptional()
@@ -16,4 +24,27 @@ export class UserQueryParam extends QueryParam {
   @IsArray()
   @IsEnum(UserRole, { each: true })
   role!: UserRole[];
+}
+
+export class UserQueryParamForMetrics {
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  from?: Date;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  to?: Date;
+}
+
+export class AdminMetricsResponseDto {
+  period!: { from: string; to: string };
+  totals!: TotalUserMetrics & TotalPrescriptionMetrics;
+
+  byStatus!: TotalPrescriptionByStatus;
+
+  prescriptionsPerDay!: TotalPrescriptionsPerDay[];
+
+  topDoctors!: TopDoctorMetrics[];
 }

@@ -12,6 +12,7 @@ import { runSeeds } from '../../../prisma/main.seed';
 import { UserInfo } from '../../../src/modules/identity/domain/types/auth.types';
 import { UserResponseDto } from '../../../src/modules/identity/infrastructure/dtos/auth.dto';
 import { QueryResponse } from '../../../src/shared/infrastructure/dto/filters.dto';
+import { AdminMetricsResponseDto } from '../../../src/modules/identity/infrastructure/dtos/user.dto';
 
 describe('AdminController (e2e)', () => {
   let app: INestApplication;
@@ -84,6 +85,78 @@ describe('AdminController (e2e)', () => {
         }),
       );
       expect(body.data.length).toBe(1); // 1 patient in seeders
+    });
+  });
+
+  describe('GET /admin/metrics', () => {
+    it('should return metrics without query params', async () => {
+      const res = await request(server)
+        .get('/admin/metrics')
+        .set('Cookie', `accessToken=${accessToken}`);
+
+      expect(res.status).toBe(200);
+
+      const body = res.body as AdminMetricsResponseDto;
+      const hoy = new Date().toISOString().split('T')[0]; // to now
+
+      expect(body).toMatchObject({
+        period: {
+          from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // from 30 days ago
+          to: hoy,
+        },
+        totals: {
+          doctors: 1,
+          patients: 1,
+          newPatients: 1,
+          totalPrescriptions: 8,
+          prescriptionsInPeriod: 8,
+        },
+        byStatus: {
+          pending: 5,
+          consumed: 3,
+        },
+        prescriptionsPerDay: [{ date: hoy, count: 8 }],
+        topDoctors: [
+          {
+            doctorId: expect.any(String) as string,
+            doctorEmail: doctorEmailSeed,
+            prescriptions: 8,
+          },
+        ],
+      });
+    });
+
+    it('should return metrics with query params', async () => {
+      const from = new Date(Date.now() - 50 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0];
+      const hoy = new Date().toISOString().split('T')[0];
+
+      const res = await request(server)
+        .get(`/admin/metrics?from=${from}&to=${hoy}`)
+        .set('Cookie', `accessToken=${accessToken}`);
+
+      expect(res.status).toBe(200);
+
+      const body = res.body as AdminMetricsResponseDto;
+
+      expect(body.period).toEqual({ from, to: hoy });
+      expect(body.totals).toBeDefined();
+      expect(body.byStatus).toBeDefined();
+      expect(body.prescriptionsPerDay).toBeDefined();
+      expect(body.topDoctors).toBeDefined();
+    });
+
+    it('should fail with a role not allowed', async () => {
+      const res = await request(server)
+        .post('/auth/login')
+        .send({ email: doctorEmailSeed, password: doctorPassSeed });
+      const [accessTokenDoctor] = getTokensFromCookies(res);
+
+      await request(server)
+        .get(`/admin/metrics`)
+        .set('Cookie', `accessToken=${accessTokenDoctor}`)
+        .expect(403);
     });
   });
 
