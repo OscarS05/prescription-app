@@ -35,7 +35,7 @@ export type TotalPrescriptionsPerDay = {
 
 export type TopDoctorMetrics = {
   doctorId: string;
-  doctorName: string;
+  doctorEmail: string;
   prescriptions: number;
 };
 

@@ -8,6 +8,7 @@ import { PrismaTransactionContext } from '../../../src/shared/infrastructure/pri
 import { PrescriptionStatus } from '../../../src/modules/prescriptions/domain/enums/prescription-status.enum';
 import { seedDoctor } from '../../../prisma/seeders/doctor.seed';
 import { seedPatient } from '../../../prisma/seeders/patient.seed';
+import { seedPrescriptions } from '../../../prisma/seeders/prescription.seed';
 
 describe('PrismaPrescriptionRepository Integration', () => {
   let repository: PrismaPrescriptionRepository;
@@ -226,6 +227,26 @@ describe('PrismaPrescriptionRepository Integration', () => {
       const code = await repository.findTheLastCode();
 
       expect(code).toBe('INT-998');
+    });
+  });
+
+  describe('getMetrics()', () => {
+    it('should return prescription metrics', async () => {
+      await seedPrescriptions({ doctorId, patientId, adminId: '123' });
+
+      const result = await repository.getMetrics({
+        from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        to: new Date(),
+      });
+
+      expect(result.totalPrescriptions).toBe(8);
+      expect(result.prescriptionsInPeriod).toBe(8);
+      expect(result.byStatus.pending).toBe(5);
+      expect(result.byStatus.consumed).toBe(3);
+      expect(result.prescriptionsPerDay.length).toBe(1);
+      expect(result.prescriptionsPerDay[0].count).toBe(8);
+      expect(result.topDoctors.length).toBe(1);
+      expect(result.topDoctors[0].doctorId).toBe(doctorId);
     });
   });
 });

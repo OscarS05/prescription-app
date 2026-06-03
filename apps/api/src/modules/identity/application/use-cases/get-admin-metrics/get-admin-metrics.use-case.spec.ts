@@ -41,7 +41,7 @@ describe('GetUserInfoUseCase', () => {
 
     prescriptionsPerDay: [
       {
-        date: '2023-01-01',
+        date: new Date(),
         count: 5,
       },
     ],
@@ -49,7 +49,7 @@ describe('GetUserInfoUseCase', () => {
     topDoctors: [
       {
         doctorId: 'doctor-1',
-        doctorName: 'Dr. Smith',
+        doctorEmail: 'Dr. Smith',
         prescriptions: 15,
       },
     ],
