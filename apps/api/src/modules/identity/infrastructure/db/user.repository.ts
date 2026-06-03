@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../domain/ports/user.repository';
 import { PrismaService } from '../../../../shared/infrastructure/prisma/prisma.service';
 import { CredentialRegister, User, UserQueryFilters } from '../../domain/types/auth.types';
-import { DocumentType, Prisma } from '@prisma/client';
+import { DocumentType, Prisma, UserRole } from '@prisma/client';
 import { UserMapper } from '../mappers/user.mapper';
+import { AdminMetricsRequest, TotalUserMetrics } from '../../domain/types/admin.types';
 
 @Injectable()
 export class UserRepositoryPrismaAdapter extends UserRepository {
@@ -103,5 +104,40 @@ export class UserRepositoryPrismaAdapter extends UserRepository {
         refreshTokenHash: null,
       },
     });
+  }
+
+  async getMetrics(filters: AdminMetricsRequest): Promise<TotalUserMetrics> {
+    const { from, to } = filters;
+
+    const [doctors, patients, newPatients] = await Promise.all([
+      this.prisma.user.count({
+        where: {
+          role: UserRole.doctor,
+          deletedAt: null,
+        },
+      }),
+      this.prisma.user.count({
+        where: {
+          role: UserRole.patient,
+          deletedAt: null,
+        },
+      }),
+      this.prisma.user.count({
+        where: {
+          role: UserRole.patient,
+          createdAt: {
+            gte: from,
+            lte: to,
+          },
+          deletedAt: null,
+        },
+      }),
+    ]);
+
+    return {
+      doctors,
+      patients,
+      newPatients,
+    };
   }
 }
