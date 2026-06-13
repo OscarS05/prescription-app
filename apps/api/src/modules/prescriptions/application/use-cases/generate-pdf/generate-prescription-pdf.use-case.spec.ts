@@ -17,6 +17,18 @@ describe('GeneratePrescriptionPdfUseCase', () => {
     generatePrescription: jest.fn(),
   };
 
+  const DoctorSignatureRepository = {
+    findByDoctorId: jest.fn(),
+  };
+
+  const ConfigService = {
+    get: jest.fn(),
+  };
+
+  const QrService = {
+    generate: jest.fn(),
+  };
+
   const prescriptionId = 'prescription-id';
 
   const prescription = {
@@ -36,13 +48,25 @@ describe('GeneratePrescriptionPdfUseCase', () => {
     ],
   };
 
+  const doctorSignature = {
+    id: 'sign-id',
+    doctorId: 'doctor-id',
+    imageUrl: '/image/url',
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
 
     useCase = new GeneratePrescriptionPdfUseCase(
       prescriptionRepo as any,
       userRepo as any,
+      DoctorSignatureRepository,
       pdfGenerator,
+      ConfigService,
+      QrService,
     );
   });
 
@@ -51,22 +75,29 @@ describe('GeneratePrescriptionPdfUseCase', () => {
       const buffer = Buffer.from('pdf');
 
       prescriptionRepo.findOneOrFail.mockResolvedValue(prescription);
-
+      DoctorSignatureRepository.findByDoctorId.mockResolvedValue(doctorSignature);
       userRepo.findById
         .mockResolvedValueOnce({
           email: 'doctor@test.com',
         })
         .mockResolvedValueOnce({
           email: 'patient@test.com',
+          documentType: 'cc',
+          documentNumber: '123123123',
         });
-
       pdfGenerator.generatePrescription.mockResolvedValue(buffer);
+      QrService.generate.mockResolvedValue('string-base64');
+      ConfigService.get.mockResolvedValue('exampleDomain.com');
 
       const result = await useCase.execute(prescriptionId);
 
       expect(prescriptionRepo.findOneOrFail).toHaveBeenCalledWith(prescriptionId, true);
 
       expect(pdfGenerator.generatePrescription).toHaveBeenCalledTimes(1);
+      expect(DoctorSignatureRepository.findByDoctorId).toHaveBeenCalledTimes(1);
+      expect(QrService.generate).toHaveBeenCalledTimes(1);
+      expect(pdfGenerator.generatePrescription).toHaveBeenCalledTimes(1);
+      expect(ConfigService.get).toHaveBeenCalledTimes(1);
 
       expect(pdfGenerator.generatePrescription).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -84,6 +115,7 @@ describe('GeneratePrescriptionPdfUseCase', () => {
   describe('Fail cases', () => {
     it('should fail if doctor does not exist', async () => {
       prescriptionRepo.findOneOrFail.mockResolvedValue(prescription);
+      DoctorSignatureRepository.findByDoctorId.mockResolvedValue(doctorSignature);
 
       userRepo.findById.mockResolvedValueOnce(null).mockResolvedValueOnce({
         email: 'patient@test.com',
@@ -94,6 +126,7 @@ describe('GeneratePrescriptionPdfUseCase', () => {
 
     it('should fail if patient does not exist', async () => {
       prescriptionRepo.findOneOrFail.mockResolvedValue(prescription);
+      DoctorSignatureRepository.findByDoctorId.mockResolvedValue(doctorSignature);
 
       userRepo.findById
         .mockResolvedValueOnce({

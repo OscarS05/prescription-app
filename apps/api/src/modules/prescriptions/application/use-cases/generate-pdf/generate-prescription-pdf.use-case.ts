@@ -38,7 +38,7 @@ export class GeneratePrescriptionPdfUseCase {
       qrCode: await this.qrService.generate(
         `${this.configService.get<string>('FRONTEND_URL')}/prescriptions/${prescription.id}`,
       ),
-      doctorSignatureUrl: doctorSignature.imageUrl,
+      doctorSignatureUrl: doctorSignature?.imageUrl || null,
       createdAt: prescription.createdAt.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',

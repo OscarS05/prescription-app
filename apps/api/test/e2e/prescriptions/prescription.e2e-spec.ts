@@ -121,6 +121,36 @@ describe('PrescriptionController (e2e)', () => {
     });
   });
 
+  describe('GET /prescriptions/:id/pdf', () => {
+    it('should generates a PDF', async () => {
+      const prescription = await prismaService.prescription.findFirst();
+
+      const response = await request(server)
+        .get(`/prescriptions/${prescription?.id}/pdf`)
+        .set('Cookie', `accessToken=${accessTokenPatient}`)
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+      expect(response.headers['content-type']).toContain('application/pdf');
+    });
+
+    it('should return 404 when prescription does not exist', async () => {
+      await request(server)
+        .get(`/prescriptions/${crypto.randomUUID()}`)
+        .set('Cookie', `accessToken=${accessTokenDoctor}`)
+        .expect(404);
+    });
+
+    it('should return 401 when access token is invalid', async () => {
+      const prescription = await prismaService.prescription.findFirst();
+
+      await request(server)
+        .get(`/prescriptions/${prescription?.id}/pdf`)
+        .set('Cookie', `accessToken=invalidToken`)
+        .expect(401);
+    });
+  });
+
   describe('GET /prescriptions', () => {
     it('should return prescriptions', async () => {
       const response = await request(server)

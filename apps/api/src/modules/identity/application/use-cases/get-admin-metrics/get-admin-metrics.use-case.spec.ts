@@ -22,8 +22,8 @@ describe('GetUserInfoUseCase', () => {
 
   const validResult: AdminMetricsResponse = {
     period: {
-      from: lastThirtyDays,
-      to: new Date(),
+      from: lastThirtyDays.toISOString().split('T')[0],
+      to: new Date().toISOString().split('T')[0],
     },
 
     totals: {
@@ -41,7 +41,7 @@ describe('GetUserInfoUseCase', () => {
 
     prescriptionsPerDay: [
       {
-        date: new Date(),
+        date: new Date().toISOString().split('T')[0],
         count: 5,
       },
     ],
@@ -86,7 +86,10 @@ describe('GetUserInfoUseCase', () => {
         topDoctors: validResult.topDoctors,
       });
 
-      const result = await useCase.execute(validResult.period);
+      const result = await useCase.execute({
+        from: new Date(validResult.period.from),
+        to: new Date(validResult.period.to),
+      });
 
       expect(result).toMatchObject(validResult);
     });

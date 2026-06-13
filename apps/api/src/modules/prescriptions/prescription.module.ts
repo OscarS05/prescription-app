@@ -22,12 +22,15 @@ import { PuppeteerPdfGenerator } from './infrastructure/pdf/puppeteer-generator.
 import { GeneratePrescriptionPdfUseCase } from './application/use-cases/generate-pdf/generate-prescription-pdf.use-case';
 import { UserRepository } from '../identity/domain/ports/user.repository';
 import { UserRepositoryPrismaAdapter } from '../identity/infrastructure/db/user.repository';
-import { PuppeteerService } from './infrastructure/services/puppeteer.service';
 import { TemplateService } from './infrastructure/services/templates.service';
 import { ConfigService as ConfigServiceDomain } from '../../shared/domain/ports/config.service';
 import { ConfigService } from '@nestjs/config';
 import { QrService } from '../../shared/domain/ports/qr.service';
 import { QrCodeGenerator } from '../../shared/infrastructure/services/qr.service';
+import { PuppeteerService } from './infrastructure/services/puppeteer.service';
+import { DoctorSignatureRepository } from '../identity/domain/ports/signature.repository';
+import { DoctorSignatureRepositoryPrismaAdapter } from '../identity/infrastructure/db/doctor-signature.repository';
+import { FakePuppeteerPdfGenerator } from '../../../test/__mocks__/fake-puppeteer-generator.pdf';
 
 @Module({
   imports: [PrismaModule],
@@ -37,7 +40,12 @@ import { QrCodeGenerator } from '../../shared/infrastructure/services/qr.service
     { provide: UserRepository, useClass: UserRepositoryPrismaAdapter },
     { provide: PrescriptionRepository, useClass: PrismaPrescriptionRepository },
     { provide: PrescriptionItemRepository, useClass: PrismaPrescriptionItemRepository },
-    { provide: PdfGenerator, useClass: PuppeteerPdfGenerator },
+    { provide: DoctorSignatureRepository, useClass: DoctorSignatureRepositoryPrismaAdapter },
+    {
+      provide: PdfGenerator,
+      useClass:
+        process.env.NODE_ENV === 'test' ? FakePuppeteerPdfGenerator : PuppeteerPdfGenerator,
+    },
     { provide: ConfigServiceDomain, useClass: ConfigService },
     { provide: QrService, useClass: QrCodeGenerator },
     PuppeteerService,

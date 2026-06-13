@@ -34,7 +34,6 @@ import { FindAllPrescriptionsUseCase } from '../../application/use-cases/find-al
 import { QueryResponse } from '../../../../shared/infrastructure/dto/filters.dto';
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { GeneratePrescriptionPdfUseCase } from '../../application/use-cases/generate-pdf/generate-prescription-pdf.use-case';
-import { Public } from '../../../../shared/infrastructure/decorators/public.decorator';
 
 @Controller('prescriptions')
 export class PrescriptionController {
@@ -183,7 +182,15 @@ export class PrescriptionController {
     }
   }
 
-  @Public()
+  @ApiOperation({
+    summary: 'Generate a PDF with the prescription data',
+  })
+  @ApiResponse({
+    status: 200,
+  })
+  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT)
+  @UseGuards(RolesGuard)
+  @HttpCode(200)
   @Get(':id/pdf')
   async generatePdf(@Param('id') id: string, @Res() res: Response) {
     try {
@@ -197,6 +204,7 @@ export class PrescriptionController {
 
       res.send(pdf);
     } catch (error) {
+      console.log('error:', error);
       ErrorMapper.toHttp(error);
     }
   }

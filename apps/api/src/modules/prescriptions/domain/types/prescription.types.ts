@@ -50,6 +50,6 @@ export type PrescriptionPdfData = Pick<Prescription, 'code' | 'notes'> & {
   patientDNI: string;
   createdAt: string;
   qrCode: string;
-  doctorSignatureUrl: string;
+  doctorSignatureUrl: string | null;
   items: Omit<PrescriptionItem, 'id' | 'prescriptionId'>[];
 };
