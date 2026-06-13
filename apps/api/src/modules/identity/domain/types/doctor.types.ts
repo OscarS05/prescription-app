@@ -1,5 +1,5 @@
 import { User } from './auth.types';
-import { DoctorSignatures } from './signatures.types';
+import { DoctorSignature } from './signatures.types';
 
 export type Doctor = {
   userId: string;
@@ -8,7 +8,7 @@ export type Doctor = {
   updatedAt: Date;
 
   user?: User;
-  signatures?: DoctorSignatures[];
+  signatures?: DoctorSignature[];
 };
 
 export type CreateDoctor = Pick<Doctor, 'userId' | 'specialty'>;

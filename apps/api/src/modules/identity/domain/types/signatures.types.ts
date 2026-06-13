@@ -1,4 +1,4 @@
-export type DoctorSignatures = {
+export type DoctorSignature = {
   id: string;
   doctorId: string;
   imageUrl: string;

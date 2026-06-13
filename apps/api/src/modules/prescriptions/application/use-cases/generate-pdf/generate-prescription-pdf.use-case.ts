@@ -6,12 +6,14 @@ import { UserRepository } from '../../../../identity/domain/ports/user.repositor
 import { DomainNotFoundError } from '../../../../identity/domain/errors/auth.errors';
 import { ConfigService } from '../../../../../shared/domain/ports/config.service';
 import { QrService } from '../../../../../shared/domain/ports/qr.service';
+import { DoctorSignatureRepository } from '../../../../identity/domain/ports/signature.repository';
 
 @Injectable()
 export class GeneratePrescriptionPdfUseCase {
   constructor(
     private readonly prescriptionRepo: PrescriptionRepository,
     private readonly userRepo: UserRepository,
+    private readonly doctorSignatureRepo: DoctorSignatureRepository,
     private readonly pdfGenerator: PdfGenerator,
     private readonly configService: ConfigService,
     private readonly qrService: QrService,
@@ -19,9 +21,10 @@ export class GeneratePrescriptionPdfUseCase {
 
   async execute(prescriptionId: string): Promise<Buffer> {
     const prescription = await this.prescriptionRepo.findOneOrFail(prescriptionId, true);
-    const [userDoctor, userPatient] = await Promise.all([
+    const [userDoctor, userPatient, doctorSignature] = await Promise.all([
       this.userRepo.findById(prescription.doctorId),
       this.userRepo.findById(prescription.patientId),
+      this.doctorSignatureRepo.findByDoctorId(prescription.doctorId, true),
     ]);
 
     if (!userDoctor || !userPatient) throw new DomainNotFoundError();
@@ -35,6 +38,7 @@ export class GeneratePrescriptionPdfUseCase {
       qrCode: await this.qrService.generate(
         `${this.configService.get<string>('FRONTEND_URL')}/prescriptions/${prescription.id}`,
       ),
+      doctorSignatureUrl: doctorSignature.imageUrl,
       createdAt: prescription.createdAt.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
