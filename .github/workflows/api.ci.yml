@@ -102,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PORT: 3000
-      APP_ORIGIN: http://localhost
+      FRONTEND_URL: http://localhost
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/prescription_app
       JWT_ACCESS_SECRET: secreto
       JWT_ACCESS_TTL: 900s
