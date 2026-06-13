@@ -1,7 +1,7 @@
 export interface Env {
   // App
   PORT: number;
-  APP_ORIGIN: string;
+  FRONTEND_URL: string;
 
   // DB
   DATABASE_URL: string;

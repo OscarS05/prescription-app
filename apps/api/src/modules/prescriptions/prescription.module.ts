@@ -17,14 +17,31 @@ import { PrismaUnitOfWork } from '../../shared/infrastructure/prisma/unit-of-wor
 import { PrescriptionController } from './infrastructure/controllers/prescription.controller';
 import { PrescriptionItemController } from './infrastructure/controllers/prescription-item.controller';
 import { CreatePrescriptionItemUseCase } from './application/use-cases/create-prescription-item/create-item.use-case';
+import { PdfGenerator } from './domain/ports/pdf.port';
+import { PuppeteerPdfGenerator } from './infrastructure/pdf/puppeteer-generator.pdf';
+import { GeneratePrescriptionPdfUseCase } from './application/use-cases/generate-pdf/generate-prescription-pdf.use-case';
+import { UserRepository } from '../identity/domain/ports/user.repository';
+import { UserRepositoryPrismaAdapter } from '../identity/infrastructure/db/user.repository';
+import { PuppeteerService } from './infrastructure/services/puppeteer.service';
+import { TemplateService } from './infrastructure/services/templates.service';
+import { ConfigService as ConfigServiceDomain } from '../../shared/domain/ports/config.service';
+import { ConfigService } from '@nestjs/config';
+import { QrService } from '../../shared/domain/ports/qr.service';
+import { QrCodeGenerator } from '../../shared/infrastructure/services/qr.service';
 
 @Module({
   imports: [PrismaModule],
   controllers: [PrescriptionController, PrescriptionItemController],
   providers: [
     { provide: UnitOfWorkService, useClass: PrismaUnitOfWork },
+    { provide: UserRepository, useClass: UserRepositoryPrismaAdapter },
     { provide: PrescriptionRepository, useClass: PrismaPrescriptionRepository },
     { provide: PrescriptionItemRepository, useClass: PrismaPrescriptionItemRepository },
+    { provide: PdfGenerator, useClass: PuppeteerPdfGenerator },
+    { provide: ConfigServiceDomain, useClass: ConfigService },
+    { provide: QrService, useClass: QrCodeGenerator },
+    PuppeteerService,
+    TemplateService,
     CreatePrescriptionUseCase,
     CreatePrescriptionItemUseCase,
     ConsumePrescriptionUseCase,
@@ -33,6 +50,7 @@ import { CreatePrescriptionItemUseCase } from './application/use-cases/create-pr
     EditPrescriptionUseCase,
     FindAllPrescriptionsUseCase,
     FindOnePrescriptionUseCase,
+    GeneratePrescriptionPdfUseCase,
   ],
 })
 export class PrescriptionModule {}

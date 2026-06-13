@@ -3,7 +3,6 @@ import { UserRole } from '../../../../shared/domain/enums/roles.enum';
 import { Transform, Type } from 'class-transformer';
 import { QueryParam } from '../../../../shared/infrastructure/dto/filters.dto';
 import {
-  AdminMetricsRequest,
   TopDoctorMetrics,
   TotalPrescriptionByStatus,
   TotalPrescriptionMetrics,

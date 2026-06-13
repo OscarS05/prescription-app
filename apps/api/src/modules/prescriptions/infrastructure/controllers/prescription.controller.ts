@@ -8,10 +8,13 @@ import {
   Patch,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { CreatePrescriptionUseCase } from '../../application/use-cases/create-prescription/create-prescription.use-case';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import type { Response } from 'express';
+
+import { CreatePrescriptionUseCase } from '../../application/use-cases/create-prescription/create-prescription.use-case';
 import {
   CreatePrescriptionDto,
   EditPrescriptionDto,
@@ -30,6 +33,8 @@ import { DeletePrescriptionUseCase } from '../../application/use-cases/delete-pr
 import { FindAllPrescriptionsUseCase } from '../../application/use-cases/find-all-prescriptions/find-all.use-case';
 import { QueryResponse } from '../../../../shared/infrastructure/dto/filters.dto';
 import { UserRole } from '../../../../shared/domain/enums/roles.enum';
+import { GeneratePrescriptionPdfUseCase } from '../../application/use-cases/generate-pdf/generate-prescription-pdf.use-case';
+import { Public } from '../../../../shared/infrastructure/decorators/public.decorator';
 
 @Controller('prescriptions')
 export class PrescriptionController {
@@ -40,6 +45,7 @@ export class PrescriptionController {
     private readonly editPrescriptionUseCase: EditPrescriptionUseCase,
     private readonly consumePrescriptionUseCase: ConsumePrescriptionUseCase,
     private readonly deletePrescriptionUseCase: DeletePrescriptionUseCase,
+    private readonly generatePrescriptionPdfUseCase: GeneratePrescriptionPdfUseCase,
   ) {}
 
   @ApiOperation({
@@ -172,6 +178,24 @@ export class PrescriptionController {
   async delete(@CurrentUser() user: PayloadToken, @Param('id') id: string): Promise<void> {
     try {
       await this.deletePrescriptionUseCase.execute(id, user.sub);
+    } catch (error) {
+      ErrorMapper.toHttp(error);
+    }
+  }
+
+  @Public()
+  @Get(':id/pdf')
+  async generatePdf(@Param('id') id: string, @Res() res: Response) {
+    try {
+      const pdf = await this.generatePrescriptionPdfUseCase.execute(id);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+
+        'Content-Disposition': `attachment; filename=prescription.pdf`,
+      });
+
+      res.send(pdf);
     } catch (error) {
       ErrorMapper.toHttp(error);
     }

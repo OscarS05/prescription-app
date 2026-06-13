@@ -3,7 +3,7 @@ import Joi from 'joi';
 export const validationSchema = Joi.object({
   // App
   PORT: Joi.number().required(),
-  APP_ORIGIN: Joi.string().required(),
+  FRONTEND_URL: Joi.string().required(),
 
   // DB
   DATABASE_URL: Joi.string().required(),

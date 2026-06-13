@@ -53,6 +53,8 @@ model Doctor {
 
   prescriptions Prescription[]
 
+  signatures    DoctorSignature[]
+
   @@map("doctors")
 }
 
@@ -69,20 +71,38 @@ model Patient {
   @@map("patients")
 }
 
-model Prescription {
-  id            String                @id @default(uuid())
-  doctorId      String                @map("doctor_id")
-  patientId     String                @map("patient_id")
-  code          String                @db.VarChar(255)
-  status        PrescriptionStatus
-  notes         String?               @db.VarChar(255)
-  createdAt     DateTime              @default(now()) @map("created_at")
-  updatedAt     DateTime              @updatedAt @map("updated_at")
-  consumedAt    DateTime?             @map("consumed_at")
-  deletedAt     DateTime?             @map("deleted_at")
+model DoctorSignature{
+  id            String      @id @default(uuid())
+  doctorId      String      @map("doctor_id")
+  imageUrl      String      @map("image_url") @db.VarChar(255)
+  isActive      Boolean     @default(false) @map("is_active") @db.Boolean()
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
 
-  doctor        Doctor                @relation(fields: [doctorId], references: [userId], onDelete: Cascade)
-  patient       Patient               @relation(fields: [patientId], references: [userId], onDelete: Cascade)
+  doctor        Doctor      @relation(fields: [doctorId], references: [userId], onDelete: Cascade)
+
+  prescriptions Prescription[]
+
+  @@index([doctorId])
+  @@map("doctor_signatures")
+}
+
+model Prescription {
+  id                  String                @id @default(uuid())
+  patientId           String                @map("patient_id")
+  doctorId            String                @map("doctor_id")
+  doctorSignatureId   String?               @map("doctor_signature_id")
+  code                String                @db.VarChar(255)
+  status              PrescriptionStatus
+  notes               String?               @db.VarChar(255)
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  consumedAt          DateTime?             @map("consumed_at")
+  deletedAt           DateTime?             @map("deleted_at")
+
+  doctor              Doctor                @relation(fields: [doctorId], references: [userId], onDelete: Cascade)
+  doctorSignature     DoctorSignature?      @relation(fields: [doctorSignatureId], references: [id])
+  patient             Patient               @relation(fields: [patientId], references: [userId], onDelete: Cascade)
 
   items         PrescriptionItem[]
 
