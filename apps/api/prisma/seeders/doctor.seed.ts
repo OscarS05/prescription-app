@@ -41,5 +41,13 @@ export async function seedDoctor() {
     });
   }
 
+  await prisma.doctorSignature.create({
+    data: {
+      doctorId: user.id,
+      imageUrl: '/uploads/signatures',
+      isActive: true,
+    },
+  });
+
   return user.id;
 }

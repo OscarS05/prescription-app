@@ -4,6 +4,7 @@ import { DoctorSignatureRepository } from '../../domain/ports/signature.reposito
 import { DoctorSignature } from '../../domain/types/signatures.types';
 import { PrismaRepository } from '../../../../shared/infrastructure/prisma/base.repository';
 import { PrismaTransactionContext } from '../../../../shared/infrastructure/prisma/transaction-context';
+import { DoctorSignatureMapper } from '../mappers/doctor-signature.mapper';
 
 @Injectable()
 export class DoctorSignatureRepositoryPrismaAdapter
@@ -15,6 +16,10 @@ export class DoctorSignatureRepositoryPrismaAdapter
   }
 
   async findByDoctorId(id: string, isActive: boolean): Promise<DoctorSignature | null> {
-    //
+    const result = await this.client.doctorSignature.findFirst({
+      where: { doctorId: id, isActive },
+    });
+
+    return result ? DoctorSignatureMapper.toDomain(result) : null;
   }
 }

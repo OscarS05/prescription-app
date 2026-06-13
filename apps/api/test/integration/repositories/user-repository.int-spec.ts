@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../../src/shared/infrastructure/prisma/prisma.service';
 import { UserRepositoryPrismaAdapter } from '../../../src/modules/identity/infrastructure/db/user.repository';
 import { UserRole } from '../../../src/shared/domain/enums/roles.enum';
+import { seedPatient } from '../../../prisma/seeders/patient.seed';
+import { seedDoctor } from '../../../prisma/seeders/doctor.seed';
 
 describe('UserRepositoryPrismaAdapter Integration', () => {
   let repository: UserRepositoryPrismaAdapter;
@@ -15,11 +17,12 @@ describe('UserRepositoryPrismaAdapter Integration', () => {
 
     repository = module.get(UserRepositoryPrismaAdapter);
     prisma = module.get(PrismaService);
+
+    await seedPatient();
+    await seedDoctor();
   });
 
   afterEach(async () => {
-    if (!prisma) return;
-
     await prisma.user.deleteMany({
       where: {
         email: {
@@ -30,7 +33,8 @@ describe('UserRepositoryPrismaAdapter Integration', () => {
   });
 
   afterAll(async () => {
-    if (!prisma) return;
+    await prisma.user.deleteMany();
+
     await prisma.$disconnect();
   });
 
@@ -63,7 +67,7 @@ describe('UserRepositoryPrismaAdapter Integration', () => {
       const user = await repository.findById(createdUser.id);
 
       expect(user).not.toBeNull();
-      expect(user?.id).toBe(createdUser.id);
+      expect(user?.email).toBe(createdUser.email);
     });
   });
 

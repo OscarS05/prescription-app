@@ -204,7 +204,6 @@ export class PrescriptionController {
 
       res.send(pdf);
     } catch (error) {
-      console.log('error:', error);
       ErrorMapper.toHttp(error);
     }
   }

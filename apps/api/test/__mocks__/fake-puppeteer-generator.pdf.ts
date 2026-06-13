@@ -5,6 +5,6 @@ import { PdfGenerator } from '../../src/modules/prescriptions/domain/ports/pdf.p
 @Injectable()
 export class FakePuppeteerPdfGenerator implements PdfGenerator {
   async generatePrescription(): Promise<Buffer> {
-    return Buffer.from('fake-pdf');
+    return Promise.resolve(Buffer.from('fake-pdf'));
   }
 }
