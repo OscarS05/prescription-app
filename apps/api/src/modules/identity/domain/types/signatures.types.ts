@@ -6,3 +6,5 @@ export type DoctorSignature = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type CreateSignature = Pick<DoctorSignature, 'doctorId' | 'imageUrl' | 'isActive'>;
