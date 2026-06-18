@@ -29,7 +29,7 @@ import { QrService } from '../../shared/domain/ports/qr.service';
 import { QrCodeGenerator } from '../../shared/infrastructure/services/qr.service';
 import { PuppeteerService } from './infrastructure/services/puppeteer.service';
 import { DoctorSignatureRepository } from '../identity/domain/ports/signature.repository';
-import { DoctorSignatureRepositoryPrismaAdapter } from '../identity/infrastructure/db/doctor-signature.repository';
+import { DoctorSignatureRepositoryPrismaAdapter } from '../identity/infrastructure/db/signature.repository';
 import { FakePuppeteerPdfGenerator } from '../../../test/__mocks__/fake-puppeteer-generator.pdf';
 
 @Module({
