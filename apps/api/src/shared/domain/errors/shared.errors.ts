@@ -4,3 +4,10 @@ export class DomainInternalServerError extends Error {
     this.name = 'DomainInternalServerError';
   }
 }
+
+export class BadRequestError extends Error {
+  constructor(message?: string | null) {
+    super(message || 'Internal server error');
+    this.name = 'BadRequestError';
+  }
+}

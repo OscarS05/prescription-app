@@ -27,6 +27,13 @@ import { MeController } from './infrastructure/controllers/me.controller';
 import { GetAdminMetricsUseCase } from './application/use-cases/get-admin-metrics/get-admin-metrics.use-case';
 import { PrismaPrescriptionRepository } from '../prescriptions/infrastructure/repositories/prescription.repository';
 import { PrescriptionRepository } from '../prescriptions/domain/ports/prescription.repository';
+import { DoctorSignatureRepository } from './domain/ports/signature.repository';
+import { SignatureRepositoryPrismaAdapter } from './infrastructure/db/signature.repository';
+import { UnitOfWorkService } from '../../shared/domain/ports/unit-of-work.service';
+import { PrismaUnitOfWork } from '../../shared/infrastructure/prisma/unit-of-work.adapter';
+import { CreateSignatureUseCase } from './application/use-cases/create-signature/use-case';
+import { ImageService } from '../../shared/domain/ports/image.service';
+import { ImageServiceLocalAdapter } from '../../shared/infrastructure/services/image.service';
 
 @Module({
   imports: [PrismaModule, JwtModule.register({})],
@@ -36,6 +43,9 @@ import { PrescriptionRepository } from '../prescriptions/domain/ports/prescripti
     { provide: UserRepository, useClass: UserRepositoryPrismaAdapter },
     { provide: DoctorRepository, useClass: DoctorRepositoryPrismaAdapter },
     { provide: PatientRepository, useClass: PatientRepositoryPrismaAdapter },
+    { provide: DoctorSignatureRepository, useClass: SignatureRepositoryPrismaAdapter },
+    { provide: UnitOfWorkService, useClass: PrismaUnitOfWork },
+    { provide: ImageService, useClass: ImageServiceLocalAdapter },
     { provide: TokenService, useClass: TokenServiceAdapter },
     { provide: HashService, useClass: HashServiceAdapter },
     { provide: APP_GUARD, useClass: AccessTokenGuard },
@@ -47,6 +57,7 @@ import { PrescriptionRepository } from '../prescriptions/domain/ports/prescripti
     SessionManagerService,
     GetUsersUseCase,
     GetAdminMetricsUseCase,
+    CreateSignatureUseCase,
   ],
 })
 export class AuthModule {}

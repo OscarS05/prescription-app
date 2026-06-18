@@ -29,7 +29,7 @@ import { QrService } from '../../shared/domain/ports/qr.service';
 import { QrCodeGenerator } from '../../shared/infrastructure/services/qr.service';
 import { PuppeteerService } from './infrastructure/services/puppeteer.service';
 import { DoctorSignatureRepository } from '../identity/domain/ports/signature.repository';
-import { DoctorSignatureRepositoryPrismaAdapter } from '../identity/infrastructure/db/signature.repository';
+import { SignatureRepositoryPrismaAdapter } from '../identity/infrastructure/db/signature.repository';
 import { FakePuppeteerPdfGenerator } from '../../../test/__mocks__/fake-puppeteer-generator.pdf';
 
 @Module({
@@ -40,7 +40,7 @@ import { FakePuppeteerPdfGenerator } from '../../../test/__mocks__/fake-puppetee
     { provide: UserRepository, useClass: UserRepositoryPrismaAdapter },
     { provide: PrescriptionRepository, useClass: PrismaPrescriptionRepository },
     { provide: PrescriptionItemRepository, useClass: PrismaPrescriptionItemRepository },
-    { provide: DoctorSignatureRepository, useClass: DoctorSignatureRepositoryPrismaAdapter },
+    { provide: DoctorSignatureRepository, useClass: SignatureRepositoryPrismaAdapter },
     {
       provide: PdfGenerator,
       useClass:
