@@ -1,6 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { Server } from 'http';
 import request, { Response } from 'supertest';
+import path from 'node:path';
+import { promises as fs } from 'node:fs';
 
 import { createTestApp } from '../app.e2e';
 import { PrismaService } from '../../../src/shared/infrastructure/prisma/prisma.service';
@@ -54,6 +56,13 @@ describe('MeController (e2e)', () => {
   });
 
   afterAll(async () => {
+    const uploadsDir = path.join(process.cwd(), 'uploads');
+
+    await fs.rm(uploadsDir, {
+      recursive: true,
+      force: true,
+    });
+
     await prismaService.$disconnect();
     await app.close();
   });

@@ -24,7 +24,7 @@ export class CreateSignatureUseCase {
     try {
       path = await this.imageService.save(data.buffer, 'signatures', data.filename);
 
-      return this.unitOfWork.execute(async () => {
+      return await this.unitOfWork.execute(async () => {
         await this.signatureRepo.deactivateAll(data.userId);
 
         return this.signatureRepo.create({
@@ -34,6 +34,8 @@ export class CreateSignatureUseCase {
         });
       });
     } catch (error) {
+      console.log('error:', error);
+      console.log('path:', path);
       if (path) await this.imageService.delete(path);
       throw error;
     }

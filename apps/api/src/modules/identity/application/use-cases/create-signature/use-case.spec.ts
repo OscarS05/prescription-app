@@ -23,9 +23,19 @@ describe('CreateSignatureUseCase', () => {
   const parameters = {
     userId: 'user-id',
     buffer: Buffer.from('signature'),
+    filename: 'original.jpg',
   };
 
   const folder = '/uploads/signatures/img-1.jpg';
+
+  const response = {
+    id: 'signature-id',
+    doctorId: 'doctorId',
+    imageUrl: '/uploads/signatures/img-1.jpg',
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
 
   beforeAll(() => {
     transaction.execute.mockImplementation((callback) => {
@@ -44,7 +54,7 @@ describe('CreateSignatureUseCase', () => {
     it('should create the signature', async () => {
       imageService.save.mockResolvedValue('/uploads/signatures/img-1.jpg');
       signatureRepo.deactivateAll.mockResolvedValue(undefined);
-      signatureRepo.create.mockResolvedValue(undefined);
+      signatureRepo.create.mockResolvedValue(response);
 
       const result = await useCase.execute(parameters);
 
@@ -64,7 +74,12 @@ describe('CreateSignatureUseCase', () => {
 
       expect(imageService.delete).toHaveBeenCalledTimes(0);
 
-      expect(result).toBeUndefined();
+      expect(result.id).toBe(response.id);
+      expect(result.doctorId).toBe(response.doctorId);
+      expect(result.imageUrl).toBe(response.imageUrl);
+      expect(result.isActive).toBe(response.isActive);
+      expect(result.createdAt).toBeDefined();
+      expect(result.updatedAt).toBeDefined();
     });
   });
 
